@@ -1,0 +1,314 @@
+config_version: 2
+
+blacklist_world:
+  - defaultworld
+  - exampleworld
+
+#Gửi thông báo đến bảng điều khiển khi có phiên bản mới
+check_update: true
+
+#Tiền tố cho mọi tin nhắn từ plugin
+prefix: ""
+
+settings:
+  #Số lượng tối đa mặc định cho tất cả vật phẩm
+  default_max_storage: 1000000
+  #Tự động nhặt mặc định khi tham gia lần đầu
+  default_auto_pickup: true
+  #Thời gian trễ giữa các lần cập nhật bảng xếp hạng (giây)
+  leaderboard_update_delay: 45
+  #Thời gian cache bảng xếp hạng (phút)
+  leaderboard_cache_duration: 5
+  #Số lượng tối đa người chơi hiển thị trong bảng xếp hạng
+  leaderboard_max_players: 20
+  #Tốc độ tối đa các hiệu ứng hạt (particles) để tránh gây lag
+  max_particle_count: 15
+  #Giới hạn phần trăm chuyển tài nguyên khi sử dụng nút xác nhận
+  transfer_percentage: 25
+  #Giới hạn số lượng tìm kiếm người chơi trên mỗi trang
+  players_per_page: 36
+  #Thời gian chờ tối đa khi tìm kiếm người chơi (giây)
+  search_timeout: 30
+  #Giới hạn kết quả giao dịch hiển thị trong lịch sử
+  max_history_display: 50
+  #Số lượng giao dịch hiển thị trên mỗi trang trong giao diện lịch sử
+  history_items_per_page: 45
+  #Số mục hiển thị mỗi trang khi xem lịch sử trong chat
+  history_items_per_page_chat: 20
+  #Thời gian tự động lưu dữ liệu (giây)
+  auto_save: 300
+  # Bật/tắt tính năng chatty miner (tỷ lệ hiển thị tin nhắn khi đào)
+  chatty_miner: true
+  # Tỷ lệ hiển thị tin nhắn khai thác (1/x)
+  chatty_miner_rate: 15
+  # Bật/tắt tự động lưu trữ khi kho đầy
+  auto_store_when_full: true
+  # Bật/tắt đếm số khối đã đào
+  count_mined_blocks: true
+  #Cài đặt khi đập block
+  block_break:
+    #Hủy drop của block khi đập
+    cancel_drop: true
+    #Gửi thông báo khi nhặt tài nguyên
+    send_messages: false
+  
+# Cài đặt cache - Tối ưu hoá hiệu suất
+cache:
+  # Bật/tắt hệ thống cache
+  enabled: true
+  # Thời gian để dọn dẹp cache tự động (phút)
+  cleanup_interval: 30
+  # Số lượng tối đa cache lưu trữ cho mỗi loại
+  max_items:
+    # Số lượng tối đa các item stack được cache
+    item_stacks: 500
+    # Số lượng tối đa các block có thể đào được cache
+    mineable_blocks: 2000
+    # Số lượng tối đa giá trị block được cache
+    block_values: 200
+    # Số lượng tối đa tên hiển thị vật phẩm được cache
+    display_names: 200
+  # Bật theo dõi hiệu suất cache (ghi nhận hit/miss)
+  track_performance: true
+  # Bật chế độ gỡ lỗi đồng bộ hóa
+  debug_sync: false
+  # Thời gian tự động đồng bộ hóa cho từng người chơi (mili giây)
+  auto_sync_interval: 300000
+  # Thời gian đồng bộ hóa toàn cục (mili giây)
+  global_sync_interval: 1800000
+  # Độ ưu tiên cho các hoạt động đọc/ghi cache
+  # - memory_first: Ưu tiên đọc từ bộ nhớ, giảm truy cập DB
+  # - db_first: Ưu tiên dữ liệu từ DB, tăng độ chính xác
+  # - balanced: Cân bằng giữa hiệu suất và độ chính xác
+  priority: "balanced"
+  # Cài đặt cooldown để tránh lag server
+  cooldown:
+    # Thời gian cooldown giữa các lần đập block (mili giây)
+    block_break: 20
+    # Bật/tắt giới hạn số lượng block đập trong một khoảng thời gian ngắn
+    limit_enabled: true
+    # Số lượng tối đa block có thể đập trong một khoảng thời gian
+    max_breaks: 25
+    # Khoảng thời gian để đặt lại bộ đếm (giây)
+    reset_interval: 3
+
+# Cài đặt xử lý hàng loạt - Giảm truy vấn database
+batch_processing:
+  # Bật/tắt xử lý hàng loạt
+  enabled: true
+  # Kích thước tối đa của mỗi lô xử lý
+  batch_size: 100
+  # Thời gian tối đa chờ xử lý (mili giây)
+  batch_timeout: 10000
+  # Số lần thử lại tối đa khi xảy ra lỗi
+  max_retries: 3
+  # Thời gian chờ giữa các lần thử lại (mili giây)
+  retry_delay: 1000
+  # Khoảng thời gian dọn dẹp bộ nhớ cache (mili giây)
+  cleanup_interval: 3600000
+  # Theo dõi hiệu suất xử lý batch
+  track_performance: true
+  # Độ trễ giữa các lần xử lý hàng loạt (mili giây)
+  process_delay: 10
+
+# Cài đặt xử lý hàng loạt cho thống kê (stats) - Ngăn chặn deadlock
+stats_batch_processing:
+  # Bật/tắt xử lý hàng loạt cho thống kê
+  enabled: true
+  # Kích thước tối đa của mỗi lô thống kê xử lý
+  batch_size: 50
+  # Thời gian tối đa chờ xử lý thống kê (mili giây)
+  batch_timeout: 15000
+  # Khoảng thời gian xử lý batch stats (tick Minecraft)
+  process_interval: 45
+  # Log thông tin xử lý batch stats khi số lượng lớn
+  log_batch_processing: true
+
+# Cài đặt chuyển ore
+transfer:
+  # Bật/tắt ghi lịch sử chuyển ore
+  log_history: true
+  # Giới hạn số lượng mỗi lần chuyển (0 = không giới hạn)
+  max_per_transfer: 0
+  # Thời gian chờ giữa các lần chuyển (giây)
+  cooldown: 5
+  # Bật/tắt hiệu ứng chuyển ore
+  effects_enabled: true
+
+# Lệnh bán (có thể tùy chỉnh)
+sell:
+  - "eco give #player# #money#"
+
+#Định dạng số của giá trị
+number_format: "#.##"
+
+#Ngăn chặn đặt lại và phá lại khối để lấy thêm vật phẩm
+prevent_rebreak: false
+
+#Phù phép Gia Tài (Fortune) có thể áp dụng cho các khoáng sản bên dưới
+whitelist_fortune:
+  - COAL_ORE
+  - IRON_ORE
+  - GOLD_ORE
+  - REDSTONE_ORE
+  - LAPIS_ORE
+  - DIAMOND_ORE
+  - EMERALD_ORE
+
+#Cài đặt hiệu ứng âm thanh và hạt hiệu ứng
+effects:
+  # Cài đặt chung cho hiệu ứng
+  enabled: true
+  
+  # Khi mở giao diện kho
+  storage_open:
+    sound: "BLOCK_CHEST_OPEN:0.5:1.0"
+  
+  # Khi đóng giao diện kho
+  storage_close:
+    sound: "BLOCK_CHEST_CLOSE:0.5:1.0"
+  
+  # Khi xem lịch sử giao dịch
+  history_view:
+    sound: "NOTE_PLING:0.5:1.2"
+  
+  # Hiệu ứng khi thu thập tài nguyên
+  collect:
+    # Âm thanh khi thu thập (dạng: SOUND:VOLUME:PITCH)
+    sound: "ENTITY_ITEM_PICKUP:0.2:0.8"
+    # Hiệu ứng hạt khi thu thập (dạng: PARTICLE:OFFSET_X:OFFSET_Y:OFFSET_Z:SPEED:COUNT)
+    particle: "VILLAGER_HAPPY:0.3:0.3:0.3:0.05:8"
+  
+  # Hiệu ứng khi chuyển tài nguyên thành công
+  transfer_success:
+    # Âm thanh cho người gửi
+    sender_sound: "ENTITY_PLAYER_LEVELUP:0.5:1.0"
+    # Âm thanh cho người nhận
+    receiver_sound: "ENTITY_EXPERIENCE_ORB_PICKUP:0.5:1.0"
+    # Hiệu ứng hạt cho người gửi
+    sender_particle: "VILLAGER_HAPPY:0.3:0.3:0.3:0.05:10"
+    # Hiệu ứng hạt cho người nhận
+    receiver_particle: "COMPOSTER:0.3:0.3:0.3:0.05:10"
+  
+  # Hiệu ứng khi chuyển thất bại
+  transfer_fail:
+    sound: "ENTITY_VILLAGER_NO:1.0:1.0"
+  
+  # Hiệu ứng cho số lượng lớn (>32)
+  large_transfer:
+    sender_particle: "SPELL_WITCH:0.2:0.2:0.2:0.05:10"
+    receiver_particle: "TOTEM:0.5:0.5:0.5:0.1:10"
+  
+  # Hiệu ứng khi tìm kiếm thành công
+  search_success:
+    sound: "ENTITY_EXPERIENCE_ORB_PICKUP:0.5:1.0"
+    particle: "VILLAGER_HAPPY:0.5:0.5:0.5:0.1:10"
+    
+  # Hiệu ứng khi tìm kiếm thất bại
+  search_fail:
+    sound: "ENTITY_VILLAGER_NO:1.0:1.0"
+
+#Giá trị của mỗi vật phẩm
+worth:
+  COBBLESTONE;0: 1
+  COAL;0: 2
+  COAL_BLOCK;0: 10
+  IRON_INGOT;0: 9
+  IRON_BLOCK;0: 81
+  GOLD_INGOT;0: 10
+  GOLD_BLOCK;0: 86
+  REDSTONE;0: 2
+  REDSTONE_BLOCK;0: 16
+  LAPIS_LAZULI;0: 2
+  LAPIS_BLOCK;0: 21
+  DIAMOND;0: 30
+  DIAMOND_BLOCK;0: 540
+  EMERALD;0: 90
+  EMERALD_BLOCK;0: 810
+
+# Các cài đặt cho người mới chơi
+new_player:
+  # Thông báo chào mừng
+  welcome_message: true
+  # Mở tự động giao diện kho khi tham gia lần đầu
+  auto_open_storage: false
+  # Tài nguyên khởi đầu (để trống nếu không muốn cho)
+  starting_resources:
+    # MATERIAL;DATA: AMOUNT
+    # DIAMOND;0: 5
+    # IRON_INGOT;0: 10
+
+#Người chơi có thể lưu trữ danh sách các khối bên dưới đây
+blocks:
+  #HÃY NHỚ: ĐỪNG CẤU HÌNH 2 MATERIAL_1 GIỐNG NHAU DƯỚI ĐÂY!
+  #MATERIAL_1;DATA_NUMBER:
+  # drop: MATERIAL_2;DATA_NUMBER
+  #Cho 1.12.2 và thấp hơn, MATERIAL;0 | 0 -> dữ liệu vật phẩm
+  #Ví dụ, Nếu muốn LAPIS_LAZULI cho 1.12.2 và thấp hơn -> INK_SACK;4
+  #Nếu muốn kim cương cho tất cả các phiên bản -> DIAMOND;0
+  #Đừng xóa ;0 nếu không muốn bị lỗi plugin 
+  COBBLESTONE;0:
+    drop: COBBLESTONE;0
+  STONE;0:
+    drop: COBBLESTONE;0
+  COAL_ORE;0:
+    drop: COAL;0
+  COAL_BLOCK;0:
+    drop: COAL_BLOCK;0
+  IRON_ORE;0:
+    drop: IRON_INGOT;0
+  IRON_BLOCK;0:
+    drop: IRON_BLOCK;0
+  GOLD_ORE;0:
+    drop: GOLD_INGOT;0
+  GOLD_BLOCK;0:
+    drop: GOLD_BLOCK;0
+  REDSTONE_ORE;0:
+    drop: REDSTONE;0
+  REDSTONE_BLOCK;0:
+    drop: REDSTONE_BLOCK;0
+  LAPIS_ORE;0:
+    drop: LAPIS_LAZULI;0
+  LAPIS_BLOCK;0:
+    drop: LAPIS_BLOCK;0
+  DIAMOND_ORE;0:
+    drop: DIAMOND;0
+  DIAMOND_BLOCK;0:
+    drop: DIAMOND_BLOCK;0
+  EMERALD_ORE;0:
+    drop: EMERALD;0
+  EMERALD_BLOCK;0:
+    drop: EMERALD_BLOCK;0
+items:
+  COBBLESTONE;0: "&7Đá Cuội"
+  COAL;0: "&8Than"
+  COAL_BLOCK;0: "&8Khối Than"
+  IRON_INGOT;0: "&fThỏi Sắt"
+  IRON_BLOCK;0: "&fKhối Sắt"
+  GOLD_INGOT;0: "&eThỏi Vàng"
+  GOLD_BLOCK;0: "&eKhối Vàng"
+  REDSTONE;0: "&cĐá Đỏ"
+  REDSTONE_BLOCK;0: "&cKhối Đá Đỏ"
+  LAPIS_LAZULI;0: "&1Lưu Ly"
+  LAPIS_BLOCK;0: "&1Khối Lưu Ly"
+  DIAMOND;0: "&bKim Cương"
+  DIAMOND_BLOCK;0: "&bKhối Kim Cương"
+  EMERALD;0: "&aNgọc Lục Bảo"
+  EMERALD_BLOCK;0: "&aKhối Ngọc Lục Bảo"
+mine:
+  title:
+    enable: false
+    title: "&e+#amount# #item#"
+    subtitle: "&b#storage#/#max#"
+  actionbar:
+    enable: true
+    action: "&6+#amount# #item# [#storage#/#max#]"
+
+# Cài đặt mới cho giới hạn số lượng log hiển thị mặc định và cài đặt cho chức năng logall
+history_items_per_page: 45
+#Số mục hiển thị mỗi trang khi xem lịch sử trong chat
+history_items_per_page_chat: 20
+#Số lượng tối đa log hiển thị mặc định trong lệnh /kho log
+default_log_display_limit: 100
+#Thời gian hiệu lực của lệnh logall (giây) - sau thời gian này sẽ trở về chế độ mặc định
+logall_expiry_time: 600

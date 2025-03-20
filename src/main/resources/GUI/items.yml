@@ -1,0 +1,156 @@
+# Tiêu đề của giao diện
+title: "&0Vật phẩm #material# | #player#"
+# Kích thước của giao diện: 1,2,3,4,5,6
+size: 3
+items:
+  # Vật phẩm trang trí
+  decorates:
+    # Nếu bạn muốn đặt nó vào 1 ô | slot: 1 | nếu bạn muốn đặt nó vào nhiều ô, hãy làm như thế này
+    slot: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 14, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26
+    # Tên hiển thị của vật phẩm
+    name: "&7 "
+    # Vật liệu | 1.12.2 và thấp hơn có thể sử dụng STAINED_GLASS_PANE:15
+    material: STAINED_GLASS_PANE:15
+    # Mô tả của vật phẩm
+    lore:
+      - "&7 "
+    # Số lượng vật phẩm
+    amount: 1
+    # cho 1.13.2 và thấp hơn
+    damage: 0
+    # cho 1.14 và cao hơn
+    custom-model-data: 1
+    # Vật phẩm sẽ không bị phá hủy?
+    unbreakable: true
+    # Phép bùa cho vật phẩm
+    enchants:
+      DURABILITY: 1
+    # Cờ hiệu cho vật phẩm | Nếu bạn sử dụng ALL: true -> Tất cả cờ hiệu sẽ được áp dụng cho vật phẩm
+    flags:
+      ALL: true
+  #      HIDE_ATTRIBUTES: true
+  #      HIDE_DESTROYS: true
+  #      HIDE_ENCHANTS: true
+  #      HIDE_PLACED_ON: true
+  #      HIDE_UNBREAKABLE: true
+  #      HIDE_POTION_EFFECTS: true
+  # Thiết lập vật phẩm gửi | Tên có thể thay đổi vì nó phụ thuộc vào hành động
+  deposit:
+    # Không khuyến nghị nhiều ô cho vật phẩm này
+    slot: 10
+    # Tên của vật phẩm
+    name: "&aGửi Vật phẩm"
+    # Vật liệu của vật phẩm
+    material: CHEST
+    # Mô tả của vật phẩm
+    lore:
+      - "&7 "
+      - "&f#item_amount#/#max_storage# Vật phẩm"
+      - "&7 "
+      - "&eChuột Trái - Gửi vật phẩm với số lượng tùy chỉnh"
+      - "&eChuột Phải - Gửi tất cả vật phẩm trong túi đồ"
+    # Số lượng vật phẩm
+    amount: 1
+    # cho 1.13.2 và thấp hơn
+    damage: 0
+    # cho 1.14 và cao hơn
+    custom-model-data: 1
+    # Vật phẩm sẽ không bị phá hủy?
+    unbreakable: true
+    # Phép bùa cho vật phẩm
+    enchants:
+      DURABILITY: 1
+    # Cờ hiệu cho vật phẩm | Nếu bạn sử dụng ALL: true -> Tất cả cờ hiệu sẽ được áp dụng cho vật phẩm
+    flags:
+      ALL: true
+    # Hành động khi nhấp
+    action:
+      # Nhấp trái
+      left:
+        # Loại: chat, all
+        type: chat
+        # hành động: deposit, withdraw, sell
+        action: deposit
+      # Nhấp phải
+      right:
+        # Loại: chat, all
+        type: all
+        # hành động: deposit, withdraw, sell
+        action: deposit
+  withdraw:
+    slot: 16
+    name: "&aRút Vật phẩm"
+    material: HOPPER
+    lore:
+      - "&7 "
+      - "&f#item_amount#/#max_storage# Vật phẩm"
+      - "&7 "
+      - "&eChuột Trái - Rút vật phẩm với số lượng tùy chỉnh"
+      - "&eChuột Phải - Rút tất cả vật phẩm vào túi đồ"
+    amount: 1
+    # cho 1.13.2 và thấp hơn
+    damage: 0
+    # cho 1.14 và cao hơn
+    custom-model-data: 1
+    unbreakable: true
+    enchants:
+      DURABILITY: 1
+    flags:
+      ALL: true
+    action:
+      left:
+        type: chat
+        action: withdraw
+      right:
+        type: all
+        action: withdraw
+  sell:
+    slot: 13
+    name: "&aBán Vật phẩm"
+    material: PAPER
+    lore:
+      - "&7 "
+      - "&f#item_amount#/#max_storage# Vật phẩm"
+      - "&7 "
+      - "&eChuột Trái - Bán vật phẩm với số lượng tùy chỉnh"
+      - "&eChuột Phải - Bán tất cả vật phẩm từ kho"
+    amount: 1
+    # cho 1.13.2 và thấp hơn
+    damage: 0
+    # cho 1.14 và cao hơn
+    custom-model-data: 1
+    unbreakable: true
+    enchants:
+      DURABILITY: 1
+    flags:
+      ALL: true
+    action:
+      left:
+        type: chat
+        action: sell
+      right:
+        type: all
+        action: sell
+  back:
+    slot: 18
+    name: "&aQuay lại"
+    material: ARROW
+    lore:
+      - "&eClick để trở về menu kho"
+    amount: 1
+    # cho 1.13.2 và thấp hơn
+    damage: 0
+    # cho 1.14 và cao hơn
+    custom-model-data: 1
+    unbreakable: true
+    enchants:
+      DURABILITY: 1
+    flags:
+      ALL: true
+    action:
+      left:
+        type: command
+        action: storage
+      right:
+        type: command
+        action: storage

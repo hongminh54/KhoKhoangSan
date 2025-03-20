@@ -1,0 +1,161 @@
+# Cấu hình hệ thống sự kiện khai thác
+events_version: 1
+
+# Cấu hình sự kiện chung
+event:
+  # Thời gian mặc định của sự kiện (giây)
+  default_duration: 1800
+  
+  # Cấu hình thông báo sự kiện
+  messages:
+    start: "&a&lSự kiện &e%event_type% &a&lđã bắt đầu! &7(Thời gian: %duration%)"
+    end: "&c&lSự kiện &e%event_type% &c&lđã kết thúc!"
+    reminder: "&6&lSự kiện &e%event_type% &6&lđang diễn ra! &7(Còn lại: %remaining%)"
+    progress: "&a&lTiến độ: &f%contribution% &7/ &f%total% &7/ &f%target% &7(&e%percentage%&7%)"
+    reward: "&a&lPhần thưởng: &fBạn đã nhận được phần thưởng cho &e%contribution% &fđóng góp &7(&e%percentage%&7%)"
+    goal_reached: "&a&lMục tiêu cộng đồng đã đạt được! &f%total%&7/&f%target%"
+    goal_failed: "&c&lMục tiêu cộng đồng chưa đạt được! &f%total%&7/&f%target%"
+    inventory_full: "&c&lTúi đồ đầy! &fPhần thưởng đã được thả xuống đất."
+    auto_start: "&a&lSự kiện &e%event_type% &a&lđã tự động bắt đầu theo lịch trình!"
+  
+  # Cấu hình hiển thị tiêu đề
+  title:
+    enable: true
+    start_title: "&e%event_type%"
+    start_subtitle: "&aSự kiện đã bắt đầu! &7(%duration%)"
+    end_title: "&e%event_type%"
+    end_subtitle: "&cSự kiện đã kết thúc!"
+  
+  # Hệ số nhân cho loại vật liệu trong sự kiện khoáng sản quý
+  material_multipliers:
+    DIAMOND;0: 3.0
+    EMERALD;0: 3.0
+    GOLD_INGOT;0: 2.0
+    IRON_INGOT;0: 1.5
+    COAL;0: 1.2
+    REDSTONE;0: 2.0
+    LAPIS_LAZULI;0: 2.0
+  
+  # Cấu hình cho sự kiện mục tiêu cộng đồng
+  community_goal:
+    # Mục tiêu cần đạt được
+    target: 5000
+    # Hiển thị tiến độ
+    show_progress: true
+    # Cấu hình hiển thị tiến trình chi tiết
+    progress_display:
+      # Bật/tắt hiển thị tiến trình chi tiết
+      enable: true
+      # Hiển thị trong chat khi người chơi đóng góp
+      show_in_chat: true
+      # Hiển thị trên action bar
+      show_in_actionbar: true
+      # Thời gian hiển thị trên action bar (giây)
+      actionbar_duration: 5
+      # Thời gian giữa các lần hiển thị tự động (giây)
+      update_interval: 300
+      # Định dạng tiến trình dạng thanh
+      progress_bar:
+        # Kích thước thanh
+        length: 30
+        # Ký tự phần hoàn thành
+        filled_char: "|"
+        # Ký tự phần chưa hoàn thành
+        empty_char: "."
+        # Màu phần hoàn thành
+        filled_color: "&a"
+        # Màu phần chưa hoàn thành
+        empty_color: "&7"
+      # Thông báo cập nhật tiến trình định kỳ
+      update_message: "&6&lCẬP NHẬT TIẾN TRÌNH: &f%bar% &7(%percentage%%)"
+  
+  # Cấu hình phần thưởng cho người chơi
+  rewards:
+    # Phần thưởng vật phẩm
+    items:
+      enable: true
+      list:
+        diamond:
+          material: DIAMOND
+          amount: 5
+        emerald:
+          material: EMERALD
+          amount: 10
+        gold:
+          material: GOLD_INGOT
+          amount: 20
+    
+    # Phần thưởng lệnh (thực thi với quyền console)
+    commands:
+      enable: true
+      list:
+        - "eco give %player% 1000"
+        - "xp give %player% 500"
+
+# Cấu hình cho lệnh sự kiện
+commands:
+  # Thời gian chờ giữa các sự kiện do admin kích hoạt (phút)
+  cooldown: 60
+  
+  # Thông báo khi lệnh sự kiện được sử dụng
+  messages:
+    usage: "&c/storage event <start|stop> [loại] [thời gian]"
+    start: "&aSự kiện %event_type% đã được bắt đầu trong %duration% giây!"
+    stop: "&cSự kiện đã bị dừng lại!"
+    no_event: "&cKhông có sự kiện nào đang diễn ra!"
+    cooldown: "&cBạn cần đợi %time% phút nữa để bắt đầu sự kiện mới!"
+    no_permission: "&cBạn không có quyền sử dụng lệnh này!"
+
+# Cấu hình lịch trình sự kiện tự động
+scheduler:
+  # Bật/tắt hệ thống sự kiện tự động
+  enable: true
+  
+  # Bật/tắt chế độ debug (hiển thị thông tin chi tiết hơn trong console)
+  debug_mode: false
+  
+  # Kiểm tra sự kiện tự động mỗi x phút (khuyến nghị: 10 phút để giảm tải máy chủ)
+  check_interval: 10
+  
+  # Kiểm tra sớm hơn x phút trước khi sự kiện bắt đầu
+  early_check_minutes: 5
+  
+  # Danh sách lịch trình sự kiện
+  schedules:
+    # Sự kiện hàng ngày - Nhân đôi tỷ lệ rơi (ID không được trùng lặp)
+    daily_double_drop:
+      # Loại sự kiện: DOUBLE_DROP, FORTUNE_BOOST, RARE_MATERIALS, COMMUNITY_GOAL
+      type: DOUBLE_DROP
+      # Thời gian sự kiện kéo dài (giây)
+      duration: 3600
+      # Thời gian diễn ra sự kiện, hỗ trợ nhiều thời gian
+      # Định dạng: ["HH:mm", "HH:mm", ...]
+      times: ["20:00", "12:00", "08:00"]
+      # Ngày trong tuần: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, ALL
+      days: ALL
+      # Có thông báo trước không
+      announce_before: true
+      # Thông báo trước bao nhiêu phút
+      announce_minutes: 15
+      # Tin nhắn thông báo trước
+      announce_message: "&e&lSự kiện &6Nhân đôi tỷ lệ rơi &e&lsẽ diễn ra sau &6%minutes% &e&lphút nữa!"
+    
+    # Sự kiện cuối tuần - Khoáng sản quý hiếm
+    weekend_rare:
+      type: RARE_MATERIALS
+      duration: 7200
+      times: ["18:00", "14:00"]
+      days: SATURDAY,SUNDAY
+      announce_before: true
+      announce_minutes: 30
+      announce_message: "&e&lSự kiện &6Khoáng sản quý hiếm &e&lsẽ diễn ra sau &6%minutes% &e&lphút nữa!"
+    
+    # Sự kiện mục tiêu cộng đồng hàng tuần
+    weekly_community:
+      type: COMMUNITY_GOAL
+      duration: 14400
+      times: ["19:00"]
+      days: FRIDAY
+      announce_before: true
+      announce_minutes: 60
+      announce_message: "&e&lSự kiện &6Mục tiêu cộng đồng &e&lsẽ diễn ra sau &6%minutes% &e&lphút nữa! Hãy chuẩn bị!" 
