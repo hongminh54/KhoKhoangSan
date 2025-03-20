@@ -1,0 +1,135 @@
+# Tiêu đề của giao diện
+title: "&e&lBảng Xếp Hạng - #type#"
+
+# Kích thước của giao diện: 1,2,3,4,5,6
+size: 5
+
+# Các item trong giao diện
+items:
+  # Vật phẩm trang trí
+  decorates:
+    slot: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44
+    name: "&7 "
+    material: BLACK_STAINED_GLASS_PANE
+    lore:
+      - "&7 "
+    amount: 1
+    data: 0
+    enchanted: false
+    flags:
+      ALL: true
+  
+  # Thông tin xếp hạng của người chơi
+  player_rank:
+    material: PLAYER_HEAD
+    data: 0
+    amount: 1
+    slot: 4
+    name: "&e&lXếp Hạng Của Bạn"
+    lore:
+      - "&7Xếp hạng của bạn: &f#player_rank#"
+      - "&7Thống kê: &f#type#"
+      - ""
+      - "&7Nỗ lực chơi game để tăng thứ hạng của bạn!"
+    enchanted: true
+    flags:
+      HIDE_ATTRIBUTES: true
+      HIDE_ENCHANTS: true
+  
+  # Nút chuyển đổi sang thống kê đã khai thác
+  switch_mined:
+    material: DIAMOND_PICKAXE
+    data: 0
+    amount: 1
+    slot: 38
+    name: "&b&lĐã Khai Thác"
+    lore:
+      - "&7Nhấn để xem bảng xếp hạng"
+      - "&7những người chơi đã khai thác"
+      - "&7nhiều vật phẩm nhất."
+    enchanted: false
+    flags:
+      HIDE_ATTRIBUTES: true
+    action:
+      - "[SWITCH_TYPE] mined"
+  
+  # Nút chuyển đổi sang thống kê đã gửi vào kho
+  switch_deposited:
+    material: CHEST
+    data: 0
+    amount: 1
+    slot: 39
+    name: "&6&lĐã Gửi Vào Kho"
+    lore:
+      - "&7Nhấn để xem bảng xếp hạng"
+      - "&7những người chơi đã gửi vào kho"
+      - "&7nhiều vật phẩm nhất."
+    enchanted: false
+    flags:
+      HIDE_ATTRIBUTES: true
+    action:
+      - "[SWITCH_TYPE] deposited"
+  
+  # Nút chuyển đổi sang thống kê đã rút ra
+  switch_withdrawn:
+    material: HOPPER
+    data: 0
+    amount: 1
+    slot: 41
+    name: "&a&lĐã Rút Ra"
+    lore:
+      - "&7Nhấn để xem bảng xếp hạng"
+      - "&7những người chơi đã rút ra"
+      - "&7nhiều vật phẩm nhất."
+    enchanted: false
+    flags:
+      HIDE_ATTRIBUTES: true
+    action:
+      - "[SWITCH_TYPE] withdrawn"
+  
+  # Nút chuyển đổi sang thống kê đã bán
+  switch_sold:
+    material: GOLD_INGOT
+    data: 0
+    amount: 1
+    slot: 42
+    name: "&e&lĐã Bán"
+    lore:
+      - "&7Nhấn để xem bảng xếp hạng"
+      - "&7những người chơi đã bán"
+      - "&7nhiều vật phẩm nhất."
+    enchanted: false
+    flags:
+      HIDE_ATTRIBUTES: true
+    action:
+      - "[SWITCH_TYPE] sold"
+      
+  # Nút quay lại thống kê
+  back:
+    material: ARROW
+    data: 0
+    amount: 1
+    slot: 40
+    name: "&c&lQuay Lại"
+    lore:
+      - "&7Nhấn để quay lại thống kê của bạn."
+    enchanted: false
+    flags:
+      HIDE_ATTRIBUTES: true
+    action:
+      - "[PLAYER_COMMAND] storage stats"
+  
+  # Cấu hình cho các item xếp hạng
+  rank_item:
+    material: PAPER # Vật liệu mặc định nếu không sử dụng đầu người chơi
+    use_player_head: true # Sử dụng đầu người chơi thay vì vật liệu mặc định
+    start_slot: 10 # Vị trí bắt đầu hiển thị danh sách xếp hạng
+    enchanted: false
+    # Định dạng tên hiển thị của mỗi mục trong bảng xếp hạng
+    name_format: "&f#rank#. &e#player#"
+    # Định dạng nội dung hiển thị
+    lore_format:
+      - "&7Số lượng: &f#value# vật phẩm"
+      - "&7Loại: &f#type#"
+    flags:
+      HIDE_ATTRIBUTES: true 

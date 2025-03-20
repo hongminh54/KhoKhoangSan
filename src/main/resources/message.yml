@@ -1,0 +1,48 @@
+message_version: 2
+admin:
+  new_version_available: "Đã có phiên bản mới. Bạn đang sử dụng v#old_version#, phiên bản mới v#new_version#"
+  add_material_amount: "&bĐã thêm #amount# #material# cho #player#"
+  remove_material_amount: "&bĐã xóa #amount# #material# từ #player#"
+  reload: "&eĐã tải lại các tệp"
+  set_max_storage: "&aĐã đặt kho tối đa của #player# thành #amount#"
+  set_material_amount: "&cĐã đặt #amount# #material# cho #player#"
+  not_enough_slot: "&cBạn cần thêm nhiều ô trong GUI/storage.yml -> storage_item để mở giao diện này. Số ô không đủ cho vật phẩm bạn đã cấu hình"
+  no_permission: "&cBạn không có quyền thực hiện điều này!"
+  help:
+    - "&f/Storage reload - Tải lại các tệp"
+    - "&f/Storage max <người chơi> <số lượng> - Đặt số lượng tối đa người chơi có thể lưu trữ"
+    - "&f/Storage add <vật liệu;dữ liệu> <người chơi> <số lượng> - Thêm vật phẩm cho người chơi (dữ liệu cho 1.12.2 và thấp hơn, nếu bạn dùng 1.13+ sử dụng <vật liệu>;0"
+    - "&f/Storage remove <vật liệu;dữ liệu> <người chơi> <số lượng> - Xóa vật phẩm của người chơi (dữ liệu cho 1.12.2 và thấp hơn, nếu bạn dùng 1.13+ sử dụng <vật liệu>;0"
+    - "&f/Storage set <vật liệu;dữ liệu> <người chơi> <số lượng> - Đặt vật phẩm cho người chơi (dữ liệu cho 1.12.2 và thấp hơn, nếu bạn dùng 1.13+ sử dụng <vật liệu>;0"
+    - "&f/Storage update - Tải xuống bản cập nhật mới nhất từ GitHub"
+    - "&f/Storage leaderboard - Xem bảng xếp hạng người chơi"
+user:
+  full_storage: "&cKho đã đầy, vui lòng lấy ra một số để khai thác thêm"
+  add_material_amount: "&a+ #amount# #material# &7[Từ #player#]"
+  remove_material_amount: "&c- #amount# #material# &7[Từ #player#]"
+  set_material_amount: "&c[~] #amount# #material# &7[Từ #player#]"
+  number_so_low: "&cBạn cần một số lớn hơn 0"
+  not_enough_items: "&cBạn không có đủ vật phẩm, bạn chỉ có <amount>"
+  unknown_number: "&c<number> không phải là số"
+  not_enough_slot: "&cBạn không có đủ ô để rút vật phẩm, bạn chỉ có thể giữ <slots> vật phẩm"
+  action:
+    deposit:
+      full_storage: "&cKho đã đầy &8(#item_amount#/#max_storage#)&c, bạn không thể gửi #amount# #material#!"
+      chat_number: "&aBạn muốn gửi bao nhiêu vật phẩm?"
+      deposit_item: "&aBạn đã gửi #amount# #material# | #item_amount#/#max_storage# Vật phẩm"
+    withdraw:
+      chat_number: "&aBạn muốn rút bao nhiêu vật phẩm?"
+      withdraw_item: "&aBạn đã rút #amount# #material# | #item_amount#/#max_storage# Vật phẩm"
+    sell:
+      chat_number: "&aBạn muốn bán bao nhiêu vật phẩm?"
+      can_not_sell: "&cVật phẩm này không thể bán"
+      sell_item: "&aBạn đã bán #amount# #material# và nhận được #money#$ | #item_amount#/#max_storage# Vật phẩm"
+  status:
+    status_on: "&aBật"
+    status_off: "&cTắt"
+    toggle: "&bKho của bạn đã được chuyển đổi: #status#"
+  help:
+    - "&f/Storage - Mở giao diện"
+    - "&f/Storage toggle - Bật/tắt tự động nhặt"
+    - "&f/Storage stats - Xem thống kê hoạt động khai thác của bạn"
+    - "&f/Storage leaderboard - Xem bảng xếp hạng người chơi"

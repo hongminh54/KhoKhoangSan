@@ -1,0 +1,51 @@
+name: KhoKhoangSanPlus
+version: '${project.version}'
+main: com.hongminh54.storage.Storage
+author: VoChiDanh, hongminh54, TYBZI
+description: "${project.description}"
+api-version: '1.13'
+softdepend:
+  - WorldGuard
+  - PlaceholderAPI
+commands:
+  storage:
+    description: Main command
+    aliases:
+      - kho
+permissions:
+  storage.toggle:
+    description: Toggle permission
+    default: true
+  storage.stats:
+    description: Xem thống kê hoạt động khai thác
+    default: true
+  storage.leaderboard:
+    description: Xem bảng xếp hạng người chơi
+    default: true
+  storage.admin:
+    description: Admin permission
+    default: op
+  storage.admin.add:
+    description: Admin add permission command
+    default: op
+  storage.admin.remove:
+    description: Admin remove permission command
+    default: op
+  storage.admin.set:
+    description: Admin set permission command
+    default: op
+  storage.admin.max:
+    description: Admin max permission command
+    default: op
+  storage.admin.reload:
+    description: Admin reload permission command
+    default: op
+  storage.admin.update:
+    description: Admin update permission command
+    default: op
+  storage.admin.resetleaderboard:
+    description: Quyền reset toàn bộ bảng xếp hạng
+    default: op
+  storage.admin.resetstats:
+    description: Quyền reset thống kê của người chơi
+    default: op

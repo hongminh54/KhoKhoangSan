@@ -1,0 +1,122 @@
+# Tiêu đề của giao diện
+title: "&e&lThống Kê Khai Thác"
+
+# Kích thước của giao diện: 1,2,3,4,5,6
+size: 3
+
+# Các item trong giao diện
+items:
+  # Thông tin tổng số đã khai thác
+  mining:
+    material: DIAMOND_PICKAXE
+    data: 0
+    amount: 1
+    slot: 10
+    name: "&b&lTổng Đã Khai Thác"
+    lore:
+      - "&7Tổng số vật phẩm đã khai thác:"
+      - "&f#total_mined# vật phẩm"
+      - ""
+      - "&7Việc khai thác giúp bạn thu thập"
+      - "&7tài nguyên để gửi vào kho."
+    enchanted: true
+    # Cờ hiệu cho vật phẩm
+    flags:
+      # Bạn có thể chọn ẩn các thuộc tính cụ thể hoặc ẩn tất cả bằng ALL: true
+      HIDE_ENCHANTS: true
+      HIDE_ATTRIBUTES: true
+      # ALL: true # Không sử dụng ALL: true để dễ dàng tùy chỉnh từng cờ hiệu
+
+  # Thông tin tổng số đã gửi vào kho
+  deposit:
+    material: CHEST
+    data: 0
+    amount: 1
+    slot: 12
+    name: "&6&lTổng Đã Gửi Vào Kho"
+    lore:
+      - "&7Tổng số vật phẩm đã gửi vào kho:"
+      - "&f#total_deposited# vật phẩm"
+      - ""
+      - "&7Gửi vật phẩm vào kho giúp bạn"
+      - "&7quản lý tài nguyên tốt hơn."
+    enchanted: false
+    # Cờ hiệu cho vật phẩm
+    flags:
+      HIDE_ATTRIBUTES: true
+      # Bạn có thể thêm thêm cờ hiệu tùy chỉnh ở đây
+
+  # Thông tin tổng số đã rút ra
+  withdraw:
+    material: HOPPER
+    data: 0
+    amount: 1
+    slot: 14
+    name: "&a&lTổng Đã Rút Ra"
+    lore:
+      - "&7Tổng số vật phẩm đã rút ra:"
+      - "&f#total_withdrawn# vật phẩm"
+      - ""
+      - "&7Rút vật phẩm để sử dụng"
+      - "&7cho các mục đích khác nhau."
+    enchanted: false
+    # Cờ hiệu cho vật phẩm
+    flags:
+      HIDE_ATTRIBUTES: true
+      # Bạn có thể thêm thêm cờ hiệu tùy chỉnh ở đây
+
+  # Thông tin tổng số đã bán
+  sell:
+    material: GOLD_INGOT
+    data: 0
+    amount: 1
+    slot: 16
+    name: "&e&lTổng Đã Bán"
+    lore:
+      - "&7Tổng số vật phẩm đã bán:"
+      - "&f#total_sold# vật phẩm"
+      - ""
+      - "&7Bán vật phẩm giúp bạn"
+      - "&7kiếm tiền từ tài nguyên."
+    enchanted: false
+    # Cờ hiệu cho vật phẩm
+    flags:
+      HIDE_ATTRIBUTES: true
+      # Bạn có thể thêm thêm cờ hiệu tùy chỉnh ở đây
+
+  # Nút bảng xếp hạng
+  leaderboard:
+    material: NETHER_STAR
+    data: 0
+    amount: 1
+    slot: 13
+    name: "&d&lBảng Xếp Hạng"
+    lore:
+      - "&7Nhấn để xem bảng xếp hạng"
+      - "&7của tất cả người chơi."
+      - ""
+      - "&7So sánh thành tích của bạn"
+      - "&7với những người chơi khác!"
+    enchanted: true
+    # Cờ hiệu cho vật phẩm
+    flags:
+      HIDE_ATTRIBUTES: true
+      HIDE_ENCHANTS: true
+    action:
+      - "[PLAYER_COMMAND] storage leaderboard"
+
+  # Nút quay lại kho của bạn
+  back:
+    material: ARROW
+    data: 0
+    amount: 1
+    slot: 22
+    name: "&c&lQuay Lại"
+    lore:
+      - "&7Nhấn để quay lại kho của bạn."
+    enchanted: false
+    # Cờ hiệu cho vật phẩm
+    flags:
+      HIDE_ATTRIBUTES: true
+    action:
+      - "[PLAYER_COMMAND] storage" 

@@ -1,0 +1,126 @@
+#Đừng chạm vào giá trị này
+config_version: 2
+
+blacklist_world:
+  - defaultworld
+  - exampleworld
+
+#Gửi thông báo đến bảng điều khiển khi có phiên bản mới
+check_update: true
+
+#Tiền tố cho mọi tin nhắn từ plugin
+prefix: ""
+
+settings:
+  #Số lượng tối đa mặc định cho tất cả vật phẩm
+  default_max_storage: 100000
+  #Tự động nhặt mặc định khi tham gia lần đầu
+  default_auto_pickup: false
+  #Thời gian trễ giữa các lần cập nhật bảng xếp hạng (giây)
+  leaderboard_update_delay: 25
+  #Thời gian cache bảng xếp hạng (phút)
+  leaderboard_cache_duration: 2
+
+#Lệnh bán 
+sell:
+  - "eco give #player# #money#"
+
+#Định dạng số của giá trị
+number_format: "#.##"
+
+#Ngăn chặn đặt lại và phá lại khối để lấy thêm vật phẩm
+prevent_rebreak: false
+
+#Phù phép Fortune có thể áp dụng cho danh sách khối bên dưới đây
+whitelist_fortune:
+  - COAL_ORE
+  - IRON_ORE
+  - GOLD_ORE
+  - REDSTONE_ORE
+  - LAPIS_ORE
+  - DIAMOND_ORE
+  - EMERALD_ORE
+
+#Giá trị của mỗi vật phẩm
+worth:
+  COBBLESTONE;0: 1
+  COAL;0: 2
+  COAL_BLOCK;0: 18
+  IRON_INGOT;0: 3
+  IRON_BLOCK;0: 27
+  GOLD_INGOT;0: 4
+  GOLD_BLOCK;0: 36
+  REDSTONE;0: 5
+  REDSTONE_BLOCK;0: 45
+  LAPIS_LAZULI;0: 6
+  LAPIS_BLOCK;0: 54
+  DIAMOND;0: 7
+  DIAMOND_BLOCK;0: 43
+  EMERALD;0: 8
+  EMERALD_BLOCK;0: 72
+
+#Người chơi có thể lưu trữ danh sách các khối bên dưới đây
+blocks:
+  #HÃY NHỚ: ĐỪNG CẤU HÌNH 2 MATERIAL_1 GIỐNG NHAU DƯỚI ĐÂY!
+  #MATERIAL_1;DATA_NUMBER:
+  # drop: MATERIAL_2;DATA_NUMBER
+  #Cho 1.12.2 và thấp hơn, MATERIAL;0 | 0 -> dữ liệu vật phẩm
+  #Ví dụ, Nếu bạn muốn LAPIS_LAZULI cho 1.12.2 và thấp hơn -> INK_SACK;4
+  #Nếu bạn muốn kim cương cho tất cả các phiên bản -> DIAMOND;0
+  #Đừng xóa ;0 nếu bạn không muốn tạo lỗi mới!
+  COBBLESTONE;0:
+    drop: COBBLESTONE;0
+  STONE;0:
+    drop: COBBLESTONE;0
+  COAL_ORE;0:
+    drop: COAL;0
+  COAL_BLOCK;0:
+    drop: COAL_BLOCK;0
+  IRON_ORE;0:
+    drop: IRON_INGOT;0
+  IRON_BLOCK;0:
+    drop: IRON_BLOCK;0
+  GOLD_ORE;0:
+    drop: GOLD_INGOT;0
+  GOLD_BLOCK;0:
+    drop: GOLD_BLOCK;0
+  REDSTONE_ORE;0:
+    drop: REDSTONE;0
+  REDSTONE_BLOCK;0:
+    drop: REDSTONE_BLOCK;0
+  LAPIS_ORE;0:
+    drop: LAPIS_LAZULI;0
+  LAPIS_BLOCK;0:
+    drop: LAPIS_BLOCK;0
+  DIAMOND_ORE;0:
+    drop: DIAMOND;0
+  DIAMOND_BLOCK;0:
+    drop: DIAMOND_BLOCK;0
+  EMERALD_ORE;0:
+    drop: EMERALD;0
+  EMERALD_BLOCK;0:
+    drop: EMERALD_BLOCK;0
+items:
+  COBBLESTONE;0: "&7Đá Cuội"
+  COAL;0: "&8Than"
+  COAL_BLOCK;0: "&8Khối Than"
+  IRON_INGOT;0: "&fThỏi Sắt"
+  IRON_BLOCK;0: "&fKhối Sắt"
+  GOLD_INGOT;0: "&eThỏi Vàng"
+  GOLD_BLOCK;0: "&eKhối Vàng"
+  REDSTONE;0: "&cĐá Đỏ"
+  REDSTONE_BLOCK;0: "&cKhối Đá Đỏ"
+  LAPIS_LAZULI;0: "&1Lưu Ly"
+  LAPIS_BLOCK;0: "&1Khối Lưu Ly"
+  DIAMOND;0: "&bKim Cương"
+  DIAMOND_BLOCK;0: "&bKhối Kim Cương"
+  EMERALD;0: "&aNgọc Lục Bảo"
+  EMERALD_BLOCK;0: "&aKhối Ngọc Lục Bảo"
+mine:
+  title:
+    enable: true
+    title: "&e+#amount# #item#"
+    subtitle: "&b#storage#/#max#"
+  actionbar:
+    enable: true
+    action: "&6+#amount# #item# [#storage#/#max#]"
