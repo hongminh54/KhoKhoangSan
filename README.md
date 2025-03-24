@@ -1,6 +1,6 @@
 # Storage [1.12.x - 1.20.x]
 
-> Plugin Kho khoáng sản dành cho skyblock
+> Plugin Kho khoáng sản dành cho skyblock (Author: VoChiDanh)
 
 ## Soft Depends
 
