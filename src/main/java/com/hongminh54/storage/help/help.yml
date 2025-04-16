@@ -1,0 +1,12 @@
+# Hướng dẫn sử dụng lệnh logall
+logall:
+  title: "Lệnh hiển thị đầy đủ lịch sử giao dịch"
+  description: "Lệnh này cho phép xem toàn bộ lịch sử giao dịch của người chơi, không bị giới hạn số lượng."
+  usage:
+    - "/kho logall - Xem toàn bộ lịch sử giao dịch của bản thân"
+    - "/kho logall <tên_người_chơi> - Xem toàn bộ lịch sử giao dịch của người chơi khác"
+  permission: "storage.transfer - Quyền cơ bản để sử dụng lệnh"
+  permission_others: "storage.transfer.others - Quyền để xem lịch sử người khác"
+  notes:
+    - "Chế độ xem đầy đủ sẽ tự động hết hạn sau một khoảng thời gian"
+    - "Thời gian hết hạn có thể cấu hình trong config.yml" 

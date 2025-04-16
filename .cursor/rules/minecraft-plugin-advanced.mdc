@@ -1,0 +1,616 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Minecraft Plugin Development Rules (Advanced)
+
+## Scope
+You are an expert Minecraft plugin developer using Java with Spigot, Paper, and Purpur APIs. Your goal is to write clean, modular, scalable, and version-compatible code. Always prefer API-safe methods over NMS unless absolutely necessary.
+
+## General Guidelines
+- Follow SOLID principles and modular design.
+- Write clean, readable, and reusable code with JavaDoc for public APIs.
+- Structure projects for maintainability and scalability.
+
+## Project Structure
+- main → Main class extending JavaPlugin
+- commands/ → CommandExecutor or CommandFramework usage
+- listeners/ → All @EventHandler-based logic
+- managers/ → Game logic (e.g., WarpManager, CombatManager)
+- model/ → Custom POJOs or data classes
+- nms/ → Versioned NMS abstraction (e.g., v1_20_R3/, v1_16_R3/)
+- utils/ → Static utilities, formatters, etc.
+- config/ → Configuration management (YamlConfig, Locale, etc.)
+- tasks/ → Custom scheduled/async task classes
+- messaging/ → Cross-server logic (Bungee/Velocity)
+- services/ → External services like Vault, PlaceholderAPI
+- metrics/ → Metrics collection and reporting
+- web/ → WebSocket or REST API integration
+- scripting/ → Support for dynamic scripts (e.g., JavaScript, Lua)
+- database/ → Repository classes, database migrations, and SQL queries
+
+## Code Style
+- PascalCase for class names (CombatManager, WarpCommand)
+- camelCase for methods/variables (getPlayerKills, isInCombat)
+- ALL_CAPS for constants (MAX_LEVEL, PREFIX)
+- Use constructor injection for testability
+- Log using SLF4J or getLogger().info/debug
+
+## Plugin Lifecycle
+- Use onEnable() to register services, listeners, commands
+- Use onDisable() to clean up resources, save data
+- Fail-fast: detect missing configs/dependencies early
+
+## Command Handling
+- Use CommandExecutor, TabCompleter, or libraries like:
+  - Aikar Commands
+  - Cloud Command Framework
+- Register permissions and usage in plugin.yml
+- Include tab completion and rich feedback
+
+## Event Handling
+- Always register/unregister listeners properly
+- Use EventPriority when needed
+- Avoid logic in event classes, delegate to managers
+- Check async state if applicable
+
+## Configuration
+- Use config.yml, messages.yml, settings.yml
+- Implement reloadable config system
+- Support color codes & MiniMessage
+- Use @ConfigPath or type-safe config mapping if possible
+
+## Adventure API & MiniMessage
+- Use Adventure API for text components (Paper+)
+- Format messages using MiniMessage (`<color:red>Hello</color>`)
+- Use Component text for hover/click actions
+
+## Data Storage
+- Use Flatfile (YAML, JSON) for small data
+- Use MySQL/MariaDB for relational data and multi-server setups
+- Use SQLite for single-server lightweight databases
+- Use HikariCP for connection pooling with MySQL/MariaDB
+- Implement repository pattern for data access abstraction
+- Create database migration scripts for version upgrades
+- Use prepared statements for all SQL queries to prevent SQL injection
+- Store by UUID, not player name
+- Use ORMs if helpful (e.g., JDBI, JOOQ, Hibernate Lite)
+- Include database version tracking for schema migrations
+
+## Database Best Practices
+- Create a central DatabaseManager class to manage connections
+- Use connection pools with HikariCP for efficient connection management
+- Implement proper retry mechanisms for database connectivity
+- Batch SQL operations when possible for performance
+- Use indexes on frequently queried columns
+- Create clear data models with appropriate relationships
+- Implement database schema versioning and migrations
+- Run all database operations asynchronously
+- Cache frequently accessed data to reduce database load
+- Use transactions for operations that modify multiple tables
+- Implement proper error handling for database operations
+- Create database utility methods for common CRUD operations
+- Use prepared statements with positional parameters
+- Design table schemas with normalization principles
+- Create metadata tables for tracking plugin data versions
+- Test database operations thoroughly with different loads
+
+## SQL Query Templates
+- Create reusable SQL query templates for common operations
+- Store SQL queries as constants or in resource files
+- Use proper table prefixes to avoid conflicts with other plugins
+- Implement query builders for complex dynamic queries
+- Document expected inputs and outputs for all queries
+- Test queries with large datasets to verify performance
+- Use EXPLAIN to analyze query performance
+
+## NMS & Multi-Version Support
+- Never hardcode version strings
+- Use versioned package abstraction:
+  - `nms.NmsHandler` → interface
+  - `nms.v1_20_R3.NmsHandlerImpl` → implementation
+- Load with reflection based on server version
+- Use Mojang-mapped APIs when available
+- Isolate all NMS code in single location
+
+## Async & Task Management
+- Avoid blocking main thread (especially DB, HTTP, I/O)
+- Use BukkitScheduler, BukkitRunnable, CompletableFuture
+- Create `TaskManager` class to centralize async logic
+- Use thread pools for CPU-intensive tasks
+- Use ForkJoinPool for parallel computation when appropriate
+- Implement proper thread-safe operations with synchronization or atomic variables
+- Avoid deeply nested callbacks (prefer structured async)
+- Use CompletableFuture for complex async workflows
+- Handle exceptions in async tasks properly
+
+## Messaging & Network
+- Register Plugin Messaging Channels (BungeeCord)
+  - Outgoing: `BungeeCord`
+  - Incoming: listen on `"BungeeCord"`
+- Serialize data with ByteArrayDataOutput
+- Support Redis/RabbitMQ for custom networks
+- Implement proper message classes with serialization/deserialization
+- Handle message transmission failures gracefully
+
+## Dependency Injection
+- Use manual DI pattern or lightweight containers:
+  - PicoContainer
+  - Google Guice
+- Pass dependencies via constructor
+- Avoid static singleton misuse
+- Create service locator pattern for accessing common services
+
+## Testing Framework and Methodology
+- Create unit tests for core business logic with JUnit
+- Use MockBukkit for Bukkit API mocking in tests
+- Implement integration tests for plugin components
+- Create test harnesses for simulating player interactions
+- Use docker-compose for running test environments
+- Implement stress tests for performance-critical features
+- Create scenario-based tests for common use cases
+- Use automated test reports for quality tracking
+- Implement mutation testing to ensure test quality
+- Create test fixtures for common testing scenarios
+- Document test coverage requirements for contributions
+- Use parameterized tests for different input variations
+- Implement CI pipeline for automatic test running
+- Create reproducible test environments with fixed seeds
+
+## CI/CD Pipeline and Deployment
+- Set up GitHub Actions workflow for automated builds
+- Implement semantic versioning with automatic version bumping
+- Configure automatic deployment to test servers
+- Use environment-specific configuration handling
+- Implement canary deployments for gradual rollout
+- Create automatic changelog generation
+- Configure static code analysis with SonarQube
+- Implement artifact signing for verified releases
+- Create deployment scripts for server operators
+- Implement rollback mechanisms for failed deployments
+- Configure automatic plugin metrics collection
+- Implement custom Docker images for testing environments
+- Create comprehensive build documentation
+- Implement build caching for faster CI runs
+
+## Advanced Event System
+- Create custom event hierarchy for plugin-specific events
+- Implement event priority handling for precise control
+- Use event bubbling patterns when appropriate
+- Create composite events for complex interactions
+- Implement conditional event listeners
+- Use event-driven architecture for plugin modules
+- Create event logging for debugging purposes
+- Implement event throttling for high-frequency events
+- Use event buses for cross-module communication
+- Create event snapshots for state preservation
+- Implement replay systems for event sequences
+- Design event filtering mechanisms
+- Create event correlation for complex patterns
+- Implement event transformation pipelines
+
+## Custom Items and NBT Data
+- Create custom item factory with builder pattern
+- Implement persistent NBT data storage for items
+- Design custom item usage mechanics and cooldowns
+- Create item serialization/deserialization systems
+- Implement custom durability and repair mechanics
+- Create custom tool types and efficiency systems
+- Implement gem/enchantment socket systems
+- Design set bonuses for matching equipment
+- Create custom rarity and quality systems
+- Implement item upgrade and enhancement mechanics
+- Design crafting ingredient systems
+- Create special use effects and particles
+- Implement custom armor mechanics
+- Design tiered item progression systems
+- Create loot table systems for item distribution
+
+## World Generation and Modification
+- Create custom biome providers and decorators
+- Implement structure generation with schematics
+- Design custom ore distribution patterns
+- Create dynamic terrain modification systems
+- Implement custom tree and vegetation generation
+- Design dungeon and points-of-interest generation
+- Create world border and region protection
+- Implement custom dimension loading
+- Design regeneration systems for resource areas
+- Create block replacement and transformation systems
+- Implement custom block physics behaviors
+- Design weather effects and environmental hazards
+- Create custom height maps and terrain shaping
+- Implement custom liquid flow mechanics
+- Design world-editing tools and commands
+
+## GUI and Inventory Management
+- Use InventoryHolder for custom menus and interfaces
+- Implement pagination system for menus with many items
+- Use ItemStack.Builder or ItemMeta for custom items with lore, display name, etc.
+- Store menu layouts in configuration files for easy editing
+- Handle InventoryClickEvent efficiently with proper cancellation
+- Create GUI animations using BukkitRunnable for dynamic interfaces
+- Implement template system for commonly used GUI patterns
+- Use ItemFlags to control item appearance in inventories
+- Handle inventory serialization for saving/loading custom inventories
+- Implement click cooldowns to prevent inventory interaction exploits
+
+## Security Best Practices
+- Validate all user input to prevent command and SQL injection
+- Encrypt sensitive data (passwords, payment info) using modern algorithms
+- Authenticate web requests from clients with tokens
+- Implement rate limiting to prevent spam and DoS attacks
+- Never store sensitive information in logs or plain text
+- Use UUID instead of player names for all identification
+- Be careful with command permissions and custom command execution
+- Implement data integrity checks for config and data files
+- Use secure random number generation for sensitive operations
+- Apply principle of least privilege for all operations
+
+## Optimization and Resource Management
+- Use bitmasks instead of ArrayLists for flagged data storage
+- Implement regionalized chunk loading for world performance
+- Use WeakReferences to prevent memory leaks
+- Schedule tasks with staggered timing to distribute server load
+- Use batch updates instead of frequent individual updates
+- Implement chunk loading limits and entity cleanup routines
+- Use asynchronous chunk loading when possible
+- Optimize pathfinding for custom entities
+- Implement object pooling for frequently created/destroyed objects
+- Use lazy initialization for expensive objects
+- Cache computed values when appropriate
+- Profile code regularly to identify performance bottlenecks
+- Use lightweight data structures like IntSet for numeric collections
+- Avoid heavy operations in main thread (disk I/O, network, heavy computation)
+- Implement custom memory management for large arrays
+
+## Internationalization (i18n)
+- Create message bundle system for multiple languages
+- Use message keys instead of hardcoded strings
+- Support placeholders in translations
+- Auto-detect client language when possible
+- Provide API for addons and extensions to use the i18n system
+- Create tools to manage and update language files
+- Support right-to-left languages with proper formatting
+- Allow per-player language preferences
+- Use MiniMessage format for rich text in translations
+- Implement fallback mechanisms for missing translations
+- Support Unicode characters and special symbols properly
+- Centralize translation management in a dedicated service
+
+## Update and Versioning
+- Implement automatic update-checker system
+- Use semantic versioning (MAJOR.MINOR.PATCH)
+- Maintain backward compatibility between versions
+- Implement data migration between versions
+- Connect with services like Hangar API to check for updates
+- Notify users when updates are available
+- Provide detailed changelog for each version
+- Include developer API version to help addon developers
+- Support graceful degradation for missing features
+- Allow for hotfixes without breaking compatibility
+- Implement feature flags for gradual rollout of new features
+- Create migration paths for configuration files between versions
+- Document breaking changes clearly in release notes
+- Provide migration tools for major version upgrades
+
+## Custom Game Mechanics
+- Create balanced progression systems with leveling and rewards
+- Implement custom crafting recipes with ShapedRecipe and RecipeChoice
+- Design custom enchantments with EnchantmentWrapper
+- Create special abilities triggered by events or items
+- Implement custom mobs with specific AI behaviors
+- Design region-based mechanics (custom biomes, danger zones)
+- Create time-based events and challenges
+- Implement resource gathering mechanics with custom drops
+- Create party/team systems with shared objectives
+- Design economy systems with item or currency-based trades
+- Implement permission-based skill trees or ability unlocks
+- Create custom particles and visual effects
+- Design quest and mission systems with progress tracking
+- Implement custom damage types and resistance mechanics
+- Create unique movement mechanics (grappling hooks, teleportation)
+
+## Cross-Server Integration
+- Use Plugin Messaging channels for server communication
+- Implement Redis pub/sub for real-time cross-server events
+- Create shared player data accessible across server network
+- Design fallback mechanisms for server connection failures
+- Implement cross-server teleportation with safety checks
+- Create global chat or messaging systems
+- Implement cross-server economy and transaction logs
+- Design server selection/lobby systems for networks
+- Create cross-server friend and party systems
+- Implement global leaderboards and statistics
+- Design cross-server moderation and punishment systems
+- Create API for cross-server plugin communication
+- Implement proxy-based permission synchronization
+- Design distributed processing for heavy computations
+- Create cross-server inventory and ender chest synchronization
+
+## External APIs & Integrations
+- Vault → Economy, permissions
+- PlaceholderAPI → Dynamic message placeholders
+- LuckPerms → Advanced permission management
+- WorldGuard → Region control
+- ProtocolLib → Packet manipulation
+- Citizens → NPC support
+- Dynmap / BlueMap → Map integration
+- Plan / bStats → Analytics and metrics
+- HolographicDisplays / DecentHolograms → Holographic displays
+- ItemsAdder / Oraxen → Custom items integration
+
+## Web & Scripting Extensions
+- Support REST or WebSocket integration via embedded Jetty/Undertow
+- Optionally expose plugin API for external dashboard control
+- Allow scriptable commands or event hooks via:
+  - Nashorn JavaScript (Java 8+)
+  - GraalVM for multi-language (JS, Python, Lua)
+  - Skript-style DSL if user-facing
+- Implement proper authentication for web APIs
+- Define clear API endpoints with documentation
+- Support websocket connections for real-time updates
+
+## Performance Optimization
+- Profile code regularly with tools like VisualVM or YourKit
+- Use efficient data structures for specific use cases
+- Implement caching for expensive operations
+- Batch database operations when possible
+- Use appropriate collection types (HashMap vs ConcurrentHashMap)
+- Optimize loops and iterations for large datasets
+- Use thread-local variables for thread-specific caching
+- Avoid creation of unnecessary objects in hot code paths
+- Use primitive types when possible to avoid boxing/unboxing
+- Use StringBuilders for string concatenation in loops
+
+
+## plugin.yml Template
+name: AdvancedPlugin
+main: com.example.advancedplugin.AdvancedPlugin
+version: 1.0
+api-version: 1.13
+softdepend: [Vault, PlaceholderAPI, WorldGuard]
+libraries:
+  - com.zaxxer:HikariCP:5.0.1
+  - org.mariadb.jdbc:mariadb-java-client:3.1.4
+commands:
+  admincommand:
+    description: Admin features
+    permission: plugin.admin
+permissions:
+  plugin.admin:
+    default: op
+
+## Code Templates
+
+### Database Manager Example
+```java
+public class DatabaseManager {
+    private static final String DB_HOST = "localhost";
+    private static final String DB_PORT = "3306";
+    private static final String DB_NAME = "minecraft";
+    private static final String DB_USER = "user";
+    private static final String DB_PASS = "password";
+    
+    private HikariDataSource dataSource;
+    
+    public void initialize() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME);
+        config.setUsername(DB_USER);
+        config.setPassword(DB_PASS);
+        config.setMaximumPoolSize(10);
+        
+        // Additional HikariCP settings
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        
+        dataSource = new HikariDataSource(config);
+    }
+    
+    public Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+    
+    public void close() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+        }
+    }
+    
+    public void executeAsync(SQLConsumer<Connection> consumer) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection conn = getConnection()) {
+                consumer.accept(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    
+    @FunctionalInterface
+    public interface SQLConsumer<T> {
+        void accept(T t) throws SQLException;
+    }
+}
+```
+
+### Repository Pattern Example
+```java
+public class PlayerDataRepository {
+    private final DatabaseManager databaseManager;
+    
+    // SQL queries as constants
+    private static final String CREATE_TABLE = 
+            "CREATE TABLE IF NOT EXISTS player_data (" +
+            "uuid VARCHAR(36) PRIMARY KEY, " +
+            "name VARCHAR(16) NOT NULL, " +
+            "points INT NOT NULL DEFAULT 0, " +
+            "last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "INDEX idx_name (name)" +
+            ")";
+    
+    private static final String SAVE_PLAYER = 
+            "INSERT INTO player_data (uuid, name, points) VALUES (?, ?, ?) " +
+            "ON DUPLICATE KEY UPDATE name = ?, points = ?";
+    
+    private static final String LOAD_PLAYER = 
+            "SELECT * FROM player_data WHERE uuid = ?";
+    
+    public PlayerDataRepository(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
+        initializeTable();
+    }
+    
+    private void initializeTable() {
+        databaseManager.executeAsync(conn -> {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute(CREATE_TABLE);
+            }
+        });
+    }
+    
+    public CompletableFuture<Void> savePlayer(UUID uuid, String name, int points) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        
+        databaseManager.executeAsync(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement(SAVE_PLAYER)) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, name);
+                ps.setInt(3, points);
+                ps.setString(4, name);
+                ps.setInt(5, points);
+                ps.executeUpdate();
+                future.complete(null);
+            } catch (SQLException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        
+        return future;
+    }
+    
+    public CompletableFuture<PlayerData> loadPlayer(UUID uuid) {
+        CompletableFuture<PlayerData> future = new CompletableFuture<>();
+        
+        databaseManager.executeAsync(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement(LOAD_PLAYER)) {
+                ps.setString(1, uuid.toString());
+                
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        PlayerData data = new PlayerData(
+                            UUID.fromString(rs.getString("uuid")),
+                            rs.getString("name"),
+                            rs.getInt("points"),
+                            rs.getTimestamp("last_login").toInstant()
+                        );
+                        future.complete(data);
+                    } else {
+                        future.complete(null);
+                    }
+                }
+            } catch (SQLException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        
+        return future;
+    }
+}
+```
+
+
+## Testing & Debugging
+- Use Paper server for modern testing
+- Log exception causes with stack traces
+- Use console coloring for logs (INFO, WARN, ERROR)
+- Test with multiple Minecraft versions
+- Use JUnit and MockBukkit for unit testing
+- Set up a local test server with Docker
+- Create automated test scenarios for common features
+- Use MockJDBC for database testing
+
+## Build & Deployment
+- Use Maven or Gradle
+- Use Maven Shade Plugin / Gradle Shadow for fat JARs
+- Set up multiple build profiles for development/production
+- Use GitHub Actions for CI/CD builds
+- Setup plugin update checker (if needed)
+- Provide plugin marketplace metadata (Hangar, Modrinth, SpigotMC)
+- Create Docker Compose files for development environments
+
+## AI Behavior
+- Generate modular, version-safe, efficient plugin code
+- Prefer Paper API over NMS unless NMS is required
+- Always use best practices and modern APIs (Adventure, MiniMessage, async IO)
+- Include clear comments, error handling, and extensibility
+- Provide database management patterns with proper connection handling
+
+## Version-Specific Optimization and Compatibility
+
+### Version Targeting and Adaptation
+- Define target Minecraft versions clearly at the start of development (e.g., 1.8.8-1.12.2 or 1.13+)
+- Create version-specific branches in your repository for major version differences
+- Use the api-version field in plugin.yml to signal compatibility to the server
+- Document version-specific features and compatibility in your README.md
+- Apply the version detection pattern to automatically adapt to the server version
+
+### Legacy Version Support (1.8.8 - 1.12.2)
+- Use Material enum with version check for materials that changed names
+- Implement legacy color code handling instead of MiniMessage for older servers
+- Be aware of block data differences (pre-1.13 uses data values, post-1.13 uses blockstates)
+- Maintain compatibility with legacy inventory API when needed
+- Use CraftItemStack for accessing NMS in a version-compatible way
+- Handle different event API signatures between versions
+- Create utility classes for version-specific handling of common operations
+- Implement proper legacy world handling (pre-1.13 uses numeric world names)
+
+### Modern Version Support (1.13+)
+- Use modern namespaced materials and keys (minecraft:stone instead of STONE)
+- Implement PersistentDataContainer for NBT data instead of direct NMS access
+- Leverage Paper API for improved performance when available
+- Use MiniMessage for advanced text formatting with components
+- Take advantage of improved particle API and effects
+- Implement newer scheduling mechanisms for improved performance
+
+### Multi-Version Compatibility Layer
+- Create abstraction interfaces for all version-dependent functionality
+- Implement proxy classes that detect and call the correct version implementation
+- Use reflection minimally and cache reflection results for performance
+- Create a utility class to handle Material name resolution across versions
+- Implement a compatibility layer for item and block handling
+- Package version-specific code in separate packages like impl.v1_12_R1, impl.v1_16_R3
+- Use Maven/Gradle profiles to create version-specific builds when necessary
+
+### Performance Considerations for Older Versions
+- Optimize chunk loading operations (crucial for 1.8-1.12 servers)
+- Reduce usage of string operations in hot code paths
+- Cache results of expensive computations for older servers
+- Use entity tracking ranges appropriate for the version
+- Implement more aggressive entity cleanup on older versions
+- Profile memory usage more carefully on legacy servers
+- Use lightweight alternatives to heavy operations in older versions
+- Implement specialized data structures for better memory efficiency
+
+### Testing Across Multiple Versions
+- Maintain test servers for each major version range (e.g., 1.8.8, 1.12.2, 1.16.5, 1.19.4)
+- Create automated test scripts to verify functionality across versions
+- Document version-specific bugs and workarounds
+- Use Docker containers for quick version testing during development
+- Implement version detection in your test framework
+- Create version-specific test cases for functionality that varies
+- Check compatibility with popular server implementations (Spigot, Paper, Purpur)
+
+### Distribution and Deployment for Multiple Versions
+- Consider separate builds for major version ranges (1.8-1.12, 1.13-1.16, 1.17+)
+- Clearly label version requirements in plugin distribution channels
+- Implement runtime version checking with informative error messages
+- Create version migration tools for server administrators
+- Document upgrade paths for users moving between versions
+- Provide fallback functionality for features unavailable in older versions
+```
