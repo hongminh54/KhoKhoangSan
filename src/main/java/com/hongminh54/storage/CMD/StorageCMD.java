@@ -1,5 +1,9 @@
 package com.hongminh54.storage.CMD;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +22,7 @@ import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import com.hongminh54.storage.API.CMDBase;
+import com.hongminh54.storage.Database.PlayerData;
 import com.hongminh54.storage.Database.TransferHistory;
 import com.hongminh54.storage.Events.EventScheduler;
 import com.hongminh54.storage.Events.MiningEvent;
@@ -989,32 +994,31 @@ public class StorageCMD extends CMDBase {
             if (args.length == 4) {
                 if (MineManager.getPluginBlocks().contains(args[1])) {
                     Player p = Bukkit.getPlayer(args[2]);
-                    if (p != null) {
                         int number = Number.getInteger(args[3]);
                         if (number >= 0) {
+                        // Xử lý lệnh add
                             if (args[0].equalsIgnoreCase("add")) {
-                                if (c.hasPermission("storage.admin")
-                                        || c.hasPermission("storage.admin.add")) {
-                                    if (MineManager.addBlockAmount(p, args[1], number)) {
-                                        c.sendMessage(Chat.colorize(File.getMessage().getString("admin.add_material_amount")).replace("#amount#", args[3]).replace("#material#", args[1]).replace("#player#", p.getName()));
-                                        p.sendMessage(Chat.colorize(File.getMessage().getString("user.add_material_amount")).replace("#amount#", args[3]).replace("#material#", args[1]).replace("#player#", c.getName()));
-                                    }
-                                }
+                            if (c.hasPermission("storage.admin") || c.hasPermission("storage.admin.add")) {
+                                handleAddCommand(c, args, p, number);
                             }
+                        }
+                        // Xử lý lệnh remove
                             if (args[0].equalsIgnoreCase("remove")) {
                                 if (c.hasPermission("storage.admin") || c.hasPermission("storage.admin.remove")) {
+                                if (p != null) {
                                     if (MineManager.removeBlockAmount(p, args[1], number)) {
                                         c.sendMessage(Chat.colorize(File.getMessage().getString("admin.remove_material_amount")).replace("#amount#", args[3]).replace("#material#", args[1]).replace("#player#", p.getName()));
                                         p.sendMessage(Chat.colorize(File.getMessage().getString("user.remove_material_amount")).replace("#amount#", args[3]).replace("#material#", args[1]).replace("#player#", c.getName()));
                                     }
+                                } else {
+                                    c.sendMessage(Chat.colorize("&cNgười chơi không online. Tính năng xóa khoáng sản cho người chơi offline hiện không được hỗ trợ."));
                                 }
                             }
+                        }
+                        // Xử lý lệnh set
                             if (args[0].equalsIgnoreCase("set")) {
                                 if (c.hasPermission("storage.admin") || c.hasPermission("storage.admin.set")) {
-                                    MineManager.setBlock(p, args[1], number);
-                                    c.sendMessage(Chat.colorize(File.getMessage().getString("admin.set_material_amount")).replace("#amount#", args[3]).replace("#material#", args[1]).replace("#player#", p.getName()));
-                                    p.sendMessage(Chat.colorize(File.getMessage().getString("user.set_material_amount")).replace("#amount#", args[3]).replace("#material#", args[1]).replace("#player#", c.getName()));
-                                }
+                                handleSetCommand(c, args, p, number);
                             }
                         }
                     }
@@ -1176,9 +1180,8 @@ public class StorageCMD extends CMDBase {
             if (sender.hasPermission("storage.admin")
                     || sender.hasPermission("storage.admin.add") || sender.hasPermission("storage.admin.remove") || sender.hasPermission("storage.admin.set")) {
                 if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("set")) {
-                    if (commands.addAll(MineManager.getPluginBlocks())) {
+                    commands.addAll(MineManager.getPluginBlocks());
                         StringUtil.copyPartialMatches(args[1], commands, completions);
-                    }
                 }
             }
             
@@ -1220,8 +1223,14 @@ public class StorageCMD extends CMDBase {
                     || sender.hasPermission("storage.admin.add") || sender.hasPermission("storage.admin.remove") || sender.hasPermission("storage.admin.set")) {
                 if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("set")) {
                     if (MineManager.getPluginBlocks().contains(args[1])) {
+                        // Sử dụng getAllPlayerNames để hiển thị người chơi online và offline cho lệnh add và set
+                        if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("set")) {
+                            StringUtil.copyPartialMatches(args[2], getAllPlayerNames(args[2]), completions);
+                        } else {
+                            // Đối với lệnh remove, chỉ hiển thị người chơi online
                         Bukkit.getServer().getOnlinePlayers().forEach(player -> commands.add(player.getName()));
                         StringUtil.copyPartialMatches(args[2], commands, completions);
+                        }
                     }
                 }
             }
@@ -1275,13 +1284,56 @@ public class StorageCMD extends CMDBase {
     }
 
     private List<String> getOnlinePlayerNames(String partialName) {
-        List<String> onlinePlayerNames = new ArrayList<>();
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            if (player.getName().toLowerCase().contains(partialName.toLowerCase())) {
-                onlinePlayerNames.add(player.getName());
+        List<String> matchedPlayers = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().toLowerCase().startsWith(partialName.toLowerCase())) {
+                matchedPlayers.add(player.getName());
             }
         }
-        return onlinePlayerNames;
+        return matchedPlayers;
+    }
+    
+    /**
+     * Lấy danh sách tên người chơi (cả online và offline) từ cơ sở dữ liệu
+     * @param partialName Phần đầu của tên người chơi để tìm kiếm
+     * @return Danh sách tên người chơi phù hợp
+     */
+    private List<String> getAllPlayerNames(String partialName) {
+        List<String> matchedPlayers = new ArrayList<>();
+        
+        // Thêm người chơi online
+        matchedPlayers.addAll(getOnlinePlayerNames(partialName));
+        
+        // Thêm người chơi offline đã có dữ liệu
+        try {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            
+            try {
+                conn = Storage.db.getConnection();
+                ps = conn.prepareStatement("SELECT player FROM PlayerData WHERE player LIKE ? LIMIT 50");
+                ps.setString(1, partialName + "%");
+                rs = ps.executeQuery();
+                
+                while (rs.next()) {
+                    String playerName = rs.getString("player");
+                    // Chỉ thêm người chơi offline (người chơi online đã được thêm ở trên)
+                    if (Bukkit.getPlayer(playerName) == null && !matchedPlayers.contains(playerName)) {
+                        matchedPlayers.add(playerName);
+                    }
+                }
+            } finally {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) Storage.db.returnConnection(conn);
+            }
+        } catch (SQLException e) {
+            // Bỏ qua lỗi và chỉ trả về người chơi online
+            Storage.getStorage().getLogger().warning("Lỗi khi tìm kiếm người chơi trong cơ sở dữ liệu: " + e.getMessage());
+        }
+        
+        return matchedPlayers;
     }
 
     /**
@@ -1712,5 +1764,230 @@ public class StorageCMD extends CMDBase {
         player.sendMessage(Chat.colorize("&e&l≫ Ví dụ:"));
         player.sendMessage(Chat.colorize("&7/kho log Player1 -m:DIAMOND -from:7 -stats"));
         player.sendMessage(Chat.colorize("&7(Xem lịch sử chuyển kim cương của Player1 trong 7 ngày qua và hiển thị thống kê)"));
+    }
+
+    /**
+     * Xử lý lệnh /kho add cho cả người chơi online và offline
+     * @param c Người gửi lệnh
+     * @param args Các tham số lệnh
+     * @param targetPlayer Người chơi mục tiêu (có thể null nếu offline)
+     * @param amount Số lượng
+     */
+    private void handleAddCommand(CommandSender c, String[] args, Player targetPlayer, int amount) {
+        String targetName = args[2];
+        String material = args[1];
+        
+        if (targetPlayer != null) {
+            // Người chơi online - Sử dụng phương thức hiện có
+            Storage.getStorage().getLogger().info("Thực hiện lệnh /kho add: " + material + " cho " + targetPlayer.getName() + " số lượng " + amount);
+            
+            // Kiểm tra nếu tài nguyên không tồn tại trong kho của người chơi, thì khởi tạo
+            if (!MineManager.hasPlayerBlock(targetPlayer, material)) {
+                Storage.getStorage().getLogger().info("Khởi tạo tài nguyên " + material + " cho " + targetPlayer.getName());
+                MineManager.setBlock(targetPlayer, material, 0);
+            }
+            
+            // Thực hiện thêm tài nguyên
+            if (MineManager.addBlockAmount(targetPlayer, material, amount)) {
+                c.sendMessage(Chat.colorize(File.getMessage().getString("admin.add_material_amount")).replace("#amount#", Integer.toString(amount)).replace("#material#", material).replace("#player#", targetPlayer.getName()));
+                targetPlayer.sendMessage(Chat.colorize(File.getMessage().getString("user.add_material_amount")).replace("#amount#", Integer.toString(amount)).replace("#material#", material).replace("#player#", c.getName()));
+                
+                // Ghi log xác nhận số lượng sau khi thêm
+                int currentAmount = MineManager.getPlayerBlock(targetPlayer, material);
+                Storage.getStorage().getLogger().info("Đã thêm thành công: " + material + " cho " + targetPlayer.getName() + ", số lượng hiện tại: " + currentAmount);
+                
+                // Lưu dữ liệu ngay lập tức
+                MineManager.savePlayerDataAsync(targetPlayer);
+            } else {
+                c.sendMessage(Chat.colorize("&c❌ Không thể thêm tài nguyên. Có thể do kho đã đầy hoặc lỗi dữ liệu."));
+                Storage.getStorage().getLogger().warning("Không thể thêm tài nguyên " + material + " cho " + targetPlayer.getName() + ", số lượng: " + amount);
+            }
+        } else {
+            // Người chơi offline - Cập nhật trực tiếp trong cơ sở dữ liệu
+            try {
+                Storage.getStorage().getLogger().info("Thực hiện lệnh /kho add cho người chơi offline: " + material + " cho " + targetName + " số lượng " + amount);
+                
+                // Lấy dữ liệu từ database
+                PlayerData playerData = Storage.db.getData(targetName);
+                if (playerData == null) {
+                    c.sendMessage(Chat.colorize("&c❌ Không tìm thấy dữ liệu người chơi: " + targetName));
+                    return;
+                }
+                
+                // Chuyển đổi dữ liệu chuỗi JSON thành danh sách
+                List<String> blockData = MineManager.convertOnlineData(playerData.getData());
+                
+                // Tìm và cập nhật tài nguyên trong danh sách
+                boolean foundResource = false;
+                int maxStorage = playerData.getMax();
+                Map<String, Integer> blockMap = new HashMap<>();
+                
+                // Chuyển đổi danh sách thành map để dễ xử lý
+                for (String blockEntry : blockData) {
+                    String[] parts = blockEntry.split(";");
+                    if (parts.length >= 2) {
+                        String blockMaterial = parts[0];
+                        int blockAmount = 0;
+                        try {
+                            blockAmount = Integer.parseInt(parts[1]);
+                        } catch (NumberFormatException e) {
+                            // Bỏ qua lỗi, giữ số lượng là 0
+                        }
+                        
+                        blockMap.put(blockMaterial, blockAmount);
+                    }
+                }
+                
+                // Cập nhật số lượng tài nguyên
+                if (blockMap.containsKey(material)) {
+                    foundResource = true;
+                    int currentAmount = blockMap.get(material);
+                    int newAmount = currentAmount + amount;
+                    
+                    if (newAmount <= maxStorage) {
+                        blockMap.put(material, newAmount);
+                        c.sendMessage(Chat.colorize("&a✓ Đã thêm &e" + amount + " " + material + "&a vào kho của &e" + targetName + "&a. Số lượng hiện tại: &e" + newAmount));
+                    } else {
+                        blockMap.put(material, maxStorage);
+                        c.sendMessage(Chat.colorize("&e⚠ Kho đã đầy. Đã đặt " + material + " cho " + targetName + " thành giới hạn tối đa: " + maxStorage));
+                    }
+                } else {
+                    // Nếu không tìm thấy tài nguyên, thêm mới
+                    blockMap.put(material, Math.min(amount, maxStorage));
+                    c.sendMessage(Chat.colorize("&a✓ Đã thêm mới &e" + Math.min(amount, maxStorage) + " " + material + "&a vào kho của &e" + targetName));
+                }
+                
+                // Chuyển Map thành chuỗi JSON đúng định dạng
+                StringBuilder mapAsString = new StringBuilder("{");
+                for (Map.Entry<String, Integer> entry : blockMap.entrySet()) {
+                    mapAsString.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
+                }
+                
+                // Xóa dấu phẩy cuối cùng và đóng chuỗi JSON
+                if (mapAsString.length() > 1) {
+                    mapAsString.delete(mapAsString.length() - 2, mapAsString.length());
+                }
+                mapAsString.append("}");
+                
+                // Tạo đối tượng PlayerData mới với dữ liệu đã cập nhật
+                PlayerData updatedData = new PlayerData(
+                    targetName,
+                    mapAsString.toString(),
+                    maxStorage,
+                    playerData.getStatsData()
+                );
+                
+                // Cập nhật vào cơ sở dữ liệu
+                Storage.db.updateTable(updatedData);
+                Storage.getStorage().getLogger().info("Đã cập nhật thành công kho của người chơi offline: " + targetName);
+            } catch (Exception e) {
+                c.sendMessage(Chat.colorize("&c❌ Đã xảy ra lỗi khi cập nhật kho: " + e.getMessage()));
+                Storage.getStorage().getLogger().severe("Lỗi khi cập nhật kho người chơi offline " + targetName + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Xử lý lệnh /kho set cho cả người chơi online và offline
+     * @param c Người gửi lệnh
+     * @param args Các tham số lệnh
+     * @param targetPlayer Người chơi mục tiêu (có thể null nếu offline)
+     * @param amount Số lượng
+     */
+    private void handleSetCommand(CommandSender c, String[] args, Player targetPlayer, int amount) {
+        String targetName = args[2];
+        String material = args[1];
+        
+        if (targetPlayer != null) {
+            // Người chơi online - Sử dụng phương thức hiện có
+            Storage.getStorage().getLogger().info("Thực hiện lệnh /kho set: " + material + " cho " + targetPlayer.getName() + " thành " + amount);
+            
+            // Thực hiện đặt tài nguyên
+            MineManager.setBlock(targetPlayer, material, amount);
+            c.sendMessage(Chat.colorize(File.getMessage().getString("admin.set_material_amount")).replace("#amount#", Integer.toString(amount)).replace("#material#", material).replace("#player#", targetPlayer.getName()));
+            targetPlayer.sendMessage(Chat.colorize(File.getMessage().getString("user.set_material_amount")).replace("#amount#", Integer.toString(amount)).replace("#material#", material).replace("#player#", c.getName()));
+            
+            // Ghi log xác nhận số lượng sau khi đặt
+            int currentAmount = MineManager.getPlayerBlock(targetPlayer, material);
+            Storage.getStorage().getLogger().info("Đã đặt thành công: " + material + " cho " + targetPlayer.getName() + ", số lượng hiện tại: " + currentAmount);
+            
+            // Lưu dữ liệu ngay lập tức
+            MineManager.savePlayerDataAsync(targetPlayer);
+        } else {
+            // Người chơi offline - Cập nhật trực tiếp trong cơ sở dữ liệu
+            try {
+                Storage.getStorage().getLogger().info("Thực hiện lệnh /kho set cho người chơi offline: " + material + " cho " + targetName + " thành " + amount);
+                
+                // Lấy dữ liệu từ database
+                PlayerData playerData = Storage.db.getData(targetName);
+                if (playerData == null) {
+                    c.sendMessage(Chat.colorize("&c❌ Không tìm thấy dữ liệu người chơi: " + targetName));
+                    return;
+                }
+                
+                // Chuyển đổi dữ liệu chuỗi JSON thành danh sách
+                List<String> blockData = MineManager.convertOnlineData(playerData.getData());
+                
+                // Tìm và cập nhật tài nguyên trong danh sách
+                int maxStorage = playerData.getMax();
+                Map<String, Integer> blockMap = new HashMap<>();
+                
+                // Chuyển đổi danh sách thành map để dễ xử lý
+                for (String blockEntry : blockData) {
+                    String[] parts = blockEntry.split(";");
+                    if (parts.length >= 2) {
+                        String blockMaterial = parts[0];
+                        int blockAmount = 0;
+                        try {
+                            blockAmount = Integer.parseInt(parts[1]);
+                        } catch (NumberFormatException e) {
+                            // Bỏ qua lỗi, giữ số lượng là 0
+                        }
+                        blockMap.put(blockMaterial, blockAmount);
+                    }
+                }
+                
+                // Giới hạn số lượng không vượt quá maxStorage
+                int finalAmount = Math.min(amount, maxStorage);
+                
+                // Cập nhật số lượng hoặc thêm mới
+                blockMap.put(material, finalAmount);
+                
+                if (finalAmount < amount) {
+                    c.sendMessage(Chat.colorize("&e⚠ Vượt quá giới hạn kho. Đã đặt " + material + " cho " + targetName + " thành giá trị tối đa: " + maxStorage));
+                } else {
+                    c.sendMessage(Chat.colorize("&a✓ Đã đặt &e" + material + "&a cho &e" + targetName + "&a thành &e" + finalAmount));
+                }
+                
+                // Chuyển Map thành chuỗi JSON đúng định dạng
+                StringBuilder mapAsString = new StringBuilder("{");
+                for (Map.Entry<String, Integer> entry : blockMap.entrySet()) {
+                    mapAsString.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
+                }
+                
+                // Xóa dấu phẩy cuối cùng và đóng chuỗi JSON
+                if (mapAsString.length() > 1) {
+                    mapAsString.delete(mapAsString.length() - 2, mapAsString.length());
+                }
+                mapAsString.append("}");
+                
+                // Tạo đối tượng PlayerData mới với dữ liệu đã cập nhật
+                PlayerData updatedData = new PlayerData(
+                    targetName,
+                    mapAsString.toString(),
+                    maxStorage,
+                    playerData.getStatsData()
+                );
+                
+                // Cập nhật vào cơ sở dữ liệu
+                Storage.db.updateTable(updatedData);
+                Storage.getStorage().getLogger().info("Đã cập nhật thành công kho của người chơi offline: " + targetName);
+            } catch (Exception e) {
+                c.sendMessage(Chat.colorize("&c❌ Đã xảy ra lỗi khi cập nhật kho: " + e.getMessage()));
+                Storage.getStorage().getLogger().severe("Lỗi khi cập nhật kho người chơi offline " + targetName + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 }

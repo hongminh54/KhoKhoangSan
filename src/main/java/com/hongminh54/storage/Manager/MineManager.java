@@ -37,6 +37,9 @@ public class MineManager {
     public static HashMap<Player, Boolean> toggle = new HashMap<>();
 
     public static int getPlayerBlock(@NotNull Player p, String material) {
+        if (!playerdata.containsKey(p.getName() + "_" + material)) {
+            return 0; // Trả về 0 nếu không tìm thấy khóa trong map
+        }
         return playerdata.get(p.getName() + "_" + material);
     }
 
@@ -347,6 +350,18 @@ public class MineManager {
     }
 
     public static boolean checkBreak(@NotNull Block block) {
+        // Chặn các khối gỗ và lá cây không cho vào kho
+        String blockType = block.getType().name().toUpperCase();
+        if (blockType.contains("LOG") || 
+            blockType.contains("WOOD") || 
+            blockType.endsWith("_STEM") || 
+            blockType.contains("STRIPPED") ||
+            blockType.contains("LEAVES") ||
+            blockType.equals("LEAVES") ||
+            blockType.equals("LEAVES_2")) {
+            return false; // Không cho phép đưa gỗ và lá cây vào kho
+        }
+        
         if (File.getConfig().contains("blocks." + block.getType().name() + ";" + (new NMSAssistant().isVersionLessThanOrEqualTo(12) ? block.getData() : "0") + ".drop")) {
             return File.getConfig().getString("blocks." + block.getType().name() + ";" + (new NMSAssistant().isVersionLessThanOrEqualTo(12) ? block.getData() : "0") + ".drop") != null;
         } else if (File.getConfig().contains("blocks." + block.getType().name() + ".drop")) {

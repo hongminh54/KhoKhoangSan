@@ -805,15 +805,18 @@ public class PlayerSearchGUI implements IGUI, Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent e) {
-        // Kiểm tra nếu người chơi đang tương tác với inventory này
-        if (e.getView().getTopInventory() != inventory) {
+        // Kiểm tra nếu inventory được click là của GUI này
+        if (!e.getView().getTopInventory().equals(inventory)) {
             return;
         }
         
-        // Hủy tất cả các sự kiện click để ngăn người chơi lấy item, kể cả click vào inventory dưới
+        // Luôn hủy tất cả sự kiện click để ngăn người chơi lấy item
         e.setCancelled(true);
-        // Cập nhật inventory để đảm bảo thay đổi được áp dụng ngay lập tức
-        ((Player) e.getWhoClicked()).updateInventory();
+        
+        // Cập nhật inventory ngay lập tức để đảm bảo thay đổi được áp dụng
+        if (e.getWhoClicked() instanceof Player) {
+            ((Player) e.getWhoClicked()).updateInventory();
+        }
         
         // Ngừng xử lý nếu người chơi không phải là Player
         if (!(e.getWhoClicked() instanceof Player)) {
@@ -822,8 +825,8 @@ public class PlayerSearchGUI implements IGUI, Listener {
         
         Player clicker = (Player) e.getWhoClicked();
         
-        // Nếu slot ở khu vực túi đồ của người chơi, chỉ cần hủy sự kiện và không xử lý thêm
-        if (e.getClickedInventory() != inventory) {
+        // Nếu click vào inventory khác với inventory của GUI này, chỉ cần hủy sự kiện
+        if (e.getClickedInventory() == null || !e.getClickedInventory().equals(inventory)) {
             return;
         }
         
@@ -1180,9 +1183,15 @@ public class PlayerSearchGUI implements IGUI, Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryDrag(InventoryDragEvent e) {
-        if (e.getInventory().equals(inventory)) {
+        // Kiểm tra nếu inventory trong view là của GUI này
+        if (e.getView().getTopInventory().equals(inventory)) {
             // Hủy tất cả các sự kiện kéo thả để ngăn người chơi lấy item
             e.setCancelled(true);
+            
+            // Cập nhật inventory ngay lập tức để đảm bảo thay đổi được áp dụng
+            if (e.getWhoClicked() instanceof Player) {
+                ((Player) e.getWhoClicked()).updateInventory();
+            }
         }
     }
 

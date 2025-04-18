@@ -11,17 +11,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hongminh54.storage.CMD.StorageCMD;
+import com.hongminh54.storage.CMD.TNTEnchantCommand;
 import com.hongminh54.storage.Database.Database;
 import com.hongminh54.storage.Database.SQLite;
 import com.hongminh54.storage.Events.BlockBreakEvent_;
 import com.hongminh54.storage.Events.EventScheduler;
 import com.hongminh54.storage.Events.MiningEvent;
 import com.hongminh54.storage.GUI.GUI;
+import com.hongminh54.storage.Listeners.AxeEnchantListener;
 import com.hongminh54.storage.Listeners.BlockBreak;
 import com.hongminh54.storage.Listeners.BlockPlace;
 import com.hongminh54.storage.Listeners.Chat;
+import com.hongminh54.storage.Listeners.HoeEnchantListener;
 import com.hongminh54.storage.Listeners.JoinQuit;
 import com.hongminh54.storage.Listeners.PlayerListener;
+import com.hongminh54.storage.Listeners.TNTEnchantListener;
 import com.hongminh54.storage.Manager.MineManager;
 import com.hongminh54.storage.NMS.NMSAssistant;
 import com.hongminh54.storage.Placeholder.PAPI;
@@ -97,6 +101,12 @@ public final class Storage extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§a║  §c§oTác giả: §dVoChiDanh, hongminh54, TYBZI §a║");
         Bukkit.getConsoleSender().sendMessage("§a╚════════════════════════════════════════════════╝");
         
+        // Bật chế độ debug để theo dõi vấn đề với tính năng TNT Enchant
+        this.debug = false; // Tắt debug mặc định
+        if (debug) {
+            getLogger().info("Chế độ debug đã được bật!");
+        }
+        
         GUI.register(storage);
         SimpleConfigurationManager.register(storage);
         File.loadFiles();
@@ -144,10 +154,18 @@ public final class Storage extends JavaPlugin {
         blockBreakEvent.scheduleCacheCleanup();
         
         // Đăng ký tất cả các sự kiện
-        registerEvents(updateChecker, new JoinQuit(), new BlockBreak(), new Chat(), new BlockPlace(), blockBreakEvent);
+        registerEvents(updateChecker, new JoinQuit(), new BlockBreak(), new Chat(), 
+                       new BlockPlace(), blockBreakEvent, new TNTEnchantListener(),
+                       new AxeEnchantListener(), new HoeEnchantListener());
         updateChecker.fetch();
         
+        // Đăng ký các lệnh
         new StorageCMD("storage");
+        new TNTEnchantCommand();
+        new com.hongminh54.storage.CMD.ViewStorageCommand();
+        new com.hongminh54.storage.CMD.AxeEnchantCommand();
+        new com.hongminh54.storage.CMD.HoeEnchantCommand();
+        
         db = new SQLite(Storage.getStorage());
         db.load();
         

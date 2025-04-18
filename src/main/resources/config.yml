@@ -1,13 +1,14 @@
 config_version: 2
 
+#Không cho phép khai thác trong world
 blacklist_world:
   - defaultworld
   - exampleworld
 
-#Gửi thông báo đến bảng điều khiển khi có phiên bản mới
+#Nhận thông báo update
 check_update: true
 
-#Tiền tố cho mọi tin nhắn từ plugin
+#Prefix plugin
 prefix: ""
 
 settings:
@@ -51,7 +52,110 @@ settings:
     cancel_drop: true
     #Gửi thông báo khi nhặt tài nguyên
     send_messages: false
+
+# Cấu hình phù phép TNT
+tnt_enchant:
+  # Tiền tố hiển thị trong lore
+  lore_prefix: "&7&l[&5&lPhù Phép&7&l] &c&lTNT"
+  # Thời gian cooldown giữa các lần phá khối diện rộng (milliseconds)
+  cooldown: 2000
+  # Số lượng khối tối đa có thể phá trong một lần
+  max_blocks_per_break: 80
+  # Bật/tắt hiển thị thông báo khi khai thác hàng loạt
+  show_batch_message: true
+  # Định dạng thông báo khi khai thác hàng loạt
+  batch_message: "&aBạn đã khai thác được:"
+  # Hiệu ứng âm thanh khi kích hoạt (dạng: SOUND:VOLUME:PITCH)
+  sound: "ENTITY_GENERIC_EXPLODE:0.3:1.2"
+  # Hiệu ứng hạt khi kích hoạt (dạng: PARTICLE:OFFSET_X:OFFSET_Y:OFFSET_Z:SPEED:COUNT)
+  particle: "EXPLOSION_NORMAL:0.3:0.3:0.3:0.05:5"
+  # Bật/tắt ảnh hưởng của Fortune lên khối phá bởi TNT
+  fortune_affect: true
+  # Cài đặt thông báo hiệu ứng
+  effect_message:
+    # Bật/tắt thông báo hiệu ứng
+    enabled: false
+    # Định dạng tin nhắn (cấp độ và số lượng block được thay thế tự động)
+    format: "&cCúp tnt đã nổ được &f%blocks% &cblock!"
+
+# Cấu hình phù phép cho rìu
+axe_enchant:
+  # Cài đặt chung cho tất cả phù phép rìu
+  show_batch_message: true
+  batch_message: "&aBạn đã thu hoạch được:"
   
+  # Phù phép Tree Cutter (Chặt Cây)
+  tree_cutter:
+    # Tiền tố hiển thị trong lore
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &2&lChặt Cây"
+    # Thời gian cooldown giữa các lần chặt cây (milliseconds)
+    cooldown: 2000
+    # Số lượng khối tối đa có thể chặt trong một lần
+    max_blocks_per_break: 64
+    # Hiệu ứng âm thanh khi kích hoạt (dạng: SOUND:VOLUME:PITCH)
+    sound: "ENTITY_PLAYER_LEVELUP:0.3:1.2"
+    # Hiệu ứng hạt khi kích hoạt (dạng: PARTICLE:OFFSET_X:OFFSET_Y:OFFSET_Z:SPEED:COUNT)
+    particle: "VILLAGER_HAPPY:0.3:0.3:0.3:0.05:8"
+    # Cài đặt thông báo hiệu ứng
+    effect_message:
+      # Bật/tắt thông báo hiệu ứng
+      enabled: true
+      # Định dạng tin nhắn (cấp độ, số lượng block và tên phù phép được thay thế tự động)
+      format: "&a✓ &ePhù phép %name% %level% &ađã chặt &f%blocks% &ablock!"
+  
+  # Phù phép Regrowth (Tái Sinh)
+  regrowth:
+    # Tiền tố hiển thị trong lore
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lTái Sinh"
+    # Thời gian cooldown giữa các lần tái sinh (milliseconds)
+    cooldown: 3000
+    # Hiệu ứng âm thanh khi kích hoạt (dạng: SOUND:VOLUME:PITCH)
+    sound: "ENTITY_EXPERIENCE_ORB_PICKUP:0.5:1.2"
+    # Hiệu ứng hạt khi kích hoạt (dạng: PARTICLE:OFFSET_X:OFFSET_Y:OFFSET_Z:SPEED:COUNT)
+    particle: "VILLAGER_HAPPY:0.5:0.5:0.5:0.1:10"
+    # Cài đặt thông báo hiệu ứng
+    effect_message:
+      # Bật/tắt thông báo hiệu ứng
+      enabled: true
+      # Định dạng tin nhắn
+      format: "&aTự động tái sinh cây thành công!"
+  
+  # Phù phép Leaf Collector (Thu Lá)
+  leaf_collector:
+    # Tiền tố hiển thị trong lore
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lThu Lá"
+    # Thời gian cooldown giữa các lần thu lá (milliseconds)
+    cooldown: 1000
+    # Số lượng lá tối đa có thể thu thập trong một lần
+    max_blocks_per_break: 64
+    # Hiệu ứng âm thanh khi kích hoạt (dạng: SOUND:VOLUME:PITCH)
+    sound: "BLOCK_GRASS_BREAK:0.3:1.0"
+    # Hiệu ứng hạt khi kích hoạt (dạng: PARTICLE:OFFSET_X:OFFSET_Y:OFFSET_Z:SPEED:COUNT)
+    particle: "VILLAGER_HAPPY:0.3:0.3:0.3:0.05:8"
+    # Cài đặt thông báo hiệu ứng
+    effect_message:
+      # Bật/tắt thông báo hiệu ứng
+      enabled: true
+      # Định dạng tin nhắn (cấp độ, số lượng block và tên phù phép được thay thế tự động)
+      format: "&a✓ &ePhù phép %name% %level% &ađã thu thập &f%blocks% &alá cây!"
+  
+  # Phù phép Auto Plant (Tự Trồng)
+  auto_plant:
+    # Tiền tố hiển thị trong lore
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lTự Trồng"
+    # Thời gian cooldown giữa các lần trồng cây (milliseconds)
+    cooldown: 1000
+    # Hiệu ứng âm thanh khi kích hoạt (dạng: SOUND:VOLUME:PITCH)
+    sound: "ITEM_HOE_TILL:0.3:1.0"
+    # Hiệu ứng hạt khi kích hoạt (dạng: PARTICLE:OFFSET_X:OFFSET_Y:OFFSET_Z:SPEED:COUNT)
+    particle: "VILLAGER_HAPPY:0.3:0.3:0.3:0.05:8"
+    # Cài đặt thông báo hiệu ứng
+    effect_message:
+      # Bật/tắt thông báo hiệu ứng
+      enabled: true
+      # Định dạng tin nhắn
+      format: "&aTự động trồng cây con thành công!"
+
 # Cài đặt cache - Tối ưu hoá hiệu suất
 cache:
   # Bật/tắt hệ thống cache
@@ -312,3 +416,45 @@ history_items_per_page_chat: 20
 default_log_display_limit: 100
 #Thời gian hiệu lực của lệnh logall (giây) - sau thời gian này sẽ trở về chế độ mặc định
 logall_expiry_time: 600
+
+# Cài đặt cho phù phép cuốc
+hoe_enchant:
+  # Phù phép Nông Dân Chuyên Nghiệp (Farmers Touch)
+  farmers_touch:
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lNông Dân Chuyên Nghiệp"
+    cooldown: 10
+    sound: "ENTITY_EXPERIENCE_ORB_PICKUP:0.3:1.2"
+    particle: "VILLAGER_HAPPY:0.3:0.3:0.3:0.05:5"
+    effect_message:
+      enabled: false
+      format: "&a✿ &ePhù phép Nông Dân Chuyên Nghiệp %level% &akích hoạt! &7(Tự động trồng lại)"
+      
+  # Phù phép Đất Màu Mỡ (Fertile Soil)
+  fertile_soil:
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lĐất Màu Mỡ"
+    cooldown: 1000
+    sound: "BLOCK_GRASS_BREAK:0.3:0.8"
+    particle: "COMPOSTER:0.3:0.3:0.3:0.05:10"
+    effect_message:
+      enabled: false
+      format: "&a✿ &ePhù phép Đất Màu Mỡ %level% &akích hoạt! &7(Tăng tốc phát triển)"
+      
+  # Phù phép Kinh Nghiệm Nông Dân (Farmers Wisdom)
+  farmers_wisdom:
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lKinh Nghiệm Nông Sản"
+    cooldown: 1000
+    sound: "ENTITY_PLAYER_LEVELUP:0.2:1.5"
+    particle: "SPELL_WITCH:0.3:0.3:0.3:0.05:5"
+    effect_message:
+      enabled: false
+      format: "&a✿ &ePhù phép Kinh Nghiệm Nông Dân %level% &akích hoạt! &7(+%level% kinh nghiệm)"
+      
+  # Phù phép Tái Sinh (Regeneration)
+  regeneration:
+    lore_prefix: "&7&l[&5&lPhù Phép&7&l] &a&lTái Sinh"
+    cooldown: 3000
+    sound: "ENTITY_ITEM_BREAK:0.3:0.7"
+    particle: "TOTEM:0.3:0.3:0.3:0.05:5"
+    effect_message:
+      enabled: false
+      format: "&a✿ &ePhù phép Tái Sinh %level% &akích hoạt! &7(Hồi phục độ bền)"

@@ -13,6 +13,26 @@ commands:
     aliases:
       - kho
       - kks
+  kphuphep:
+    description: Thêm hoặc xóa phù phép TNT trên cúp
+    aliases:
+      - phupheptnt
+      - tntenchant
+  viewstorage:
+    description: Xem kho khoáng sản của người chơi khác
+    aliases:
+      - xemkho
+      - viewkho
+  axeenchant:
+    description: Thêm hoặc xóa phù phép trên rìu
+    aliases:
+      - phuphepriu
+      - axeenchant
+  hoeenchant:
+    description: Thêm hoặc xóa phù phép trên cuốc
+    aliases:
+      - phuphepcuoc
+      - hoeenchant
 permissions:
   storage.toggle:
     description: quyền bật tắt tự động nhặt vật phẩm
@@ -26,6 +46,9 @@ permissions:
   storage.transfer.others:
     description: Cho phép xem lịch sử chuyển kho của người chơi khác
     default: true
+  storage.view.others:
+    description: Cho phép xem kho khoáng sản của người chơi khác
+    default: op
   storage.leaderboard:
     description: Xem bảng xếp hạng người chơi
     default: true
@@ -62,3 +85,21 @@ permissions:
   storage.log.all:
     description: Cho phép xem toàn bộ lịch sử chuyển kho không bị giới hạn
     default: true
+  storage.tnt.enchant:
+    description: Quyền thêm/xóa phù phép TNT vào cúp
+    default: op
+  storage.tnt.admin:
+    description: Quyền thêm/xóa phù phép TNT cho người chơi khác
+    default: op
+  storage.axe.enchant:
+    description: Quyền thêm/xóa phù phép vào rìu
+    default: op
+  storage.axe.admin:
+    description: Quyền thêm/xóa phù phép rìu cho người chơi khác
+    default: op
+  storage.hoe.enchant:
+    description: Quyền thêm/xóa phù phép vào cuốc
+    default: op
+  storage.hoe.admin:
+    description: Quyền thêm/xóa phù phép cuốc cho người chơi khác
+    default: op
